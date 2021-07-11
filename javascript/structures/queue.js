@@ -18,13 +18,12 @@ class Queue {
     }
     append(value) {
         this.arr.push(value);
-        // 원한다면 추가시마다 console로 확인 가능하도록
+        // (선택사항) 원한다면 추가시마다 console로 확인 가능하도록
         return this.arr;
     }
     popleft() {
-        this.arr.shift();
-        // 원한다면 추가시마다 console로 확인 가능하도록
-        return this.arr;
+        // pop된 값을 활용할 수 있도록 반환
+        return this.arr.shift();
     }
 
     // 현재 큐를 볼 수 있는 메서드
