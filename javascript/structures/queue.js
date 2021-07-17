@@ -27,7 +27,7 @@ class Queue {
     }
 
     // 현재 큐를 볼 수 있는 메서드
-    print() {
+    getQueue() {
         return this.arr;
     }
 }
