@@ -29,8 +29,8 @@ class Heap {
 }
 
 class MinHeap extends Heap {
-    constructor(heap) {
-        super(heap)
+    constructor() {
+        super(Heap)
     }
     heappush(value) {
         this.heap.push(value);
@@ -49,17 +49,12 @@ class MinHeap extends Heap {
     }
     heappop() {
         const min = this.heap[1]
-        // 첫번째 요소만이 있다면 그냥 빼면 되므로 early return
-        if (this.heap.length <= 2) this.heap = [ null ];
-
+        // 첫번째 요소만이 있다면 그냥 빼면 됨
+        if (this.heap.length <= 2) return this.heap.pop();
         // 첫번째 요소를 없애고, 대신에 현재 마지막 요소를 넣는다.
         else this.heap[1] = this.heap.pop();
-
         // 루트 인덱스부터 시작하므로 nowIndex, leftIndex, rightIndex를 업데이트
-        // let [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(1);
-        let nowIndex = 1;
-        let leftIndex = nowIndex * 2;
-        let rightIndex = nowIndex * 2 + 1; 
+        let [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(1);
 
         // 왼쪽부터 시작하기 때문에 없으면 그대로 리턴
         if (!this.heap[leftIndex]) return min;
@@ -75,10 +70,7 @@ class MinHeap extends Heap {
         while ((this.heap[leftIndex] < this.heap[nowIndex]) || (this.heap[rightIndex] < this.heap[nowIndex])) {
             const minIndex = (this.heap[leftIndex] > this.heap[rightIndex]) ? rightIndex : leftIndex;
             this.swap(minIndex, nowIndex);
-            // [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(minIndex);
-            nowIndex = minIndex;
-            leftIndex = nowIndex * 2;
-            rightIndex = nowIndex * 2 + 1;
+            [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(minIndex);
         }
         return min;
     }
@@ -93,6 +85,8 @@ minHeap.heappush(22)
 minHeap.heappush(1)
 minHeap.heappush(1)
 minHeap.heappush(29)
+minHeap.print()
+
 let minVal = minHeap.heappop();
 console.log(minVal);
 minVal = minHeap.heappop();
@@ -103,3 +97,61 @@ minVal = minHeap.heappop();
 console.log(minVal);
 minVal = minHeap.heappop();
 console.log(minVal);
+
+
+class MaxHeap extends Heap {
+    constructor() {
+        super(Heap);
+    }
+    heappush(value) {
+        this.heap.push(value);
+        let nowIndex = this.heap.length - 1;
+        let parentIndex = this.updateParentIndex(nowIndex);
+        while(nowIndex > 1 && this.heap[nowIndex] > this.heap[parentIndex]) {
+            this.swap(nowIndex, parentIndex);
+            nowIndex = parentIndex;
+            parentIndex = this.updateParentIndex(nowIndex)
+        }
+    }
+    heappop() {
+        const max = this.heap[1];
+        if (this.heap.length <= 2) return this.heap.pop();
+        else this.heap[1] = this.heap.pop();
+        let [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(1);
+        if (!this.heap[leftIndex]) return max;
+        if (!this.heap[rightIndex]) {
+            if (this.heap[nowIndex] < this.heap[leftIndex]) {
+                this.swap(nowIndex, leftIndex);
+            }
+            return max;
+        };
+        while(this.heap[leftIndex] > this.heap[nowIndex] || this.heap[rightIndex] > this.heap[nowIndex]) {
+            const maxIndex = this.heap[leftIndex] > this.heap[rightIndex] ? leftIndex : rightIndex;
+            this.swap(nowIndex, maxIndex);
+            [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(maxIndex)
+        };
+        return max;
+    }
+}
+
+const maxHeap = new MaxHeap();
+maxHeap.heappush(23)
+maxHeap.heappush(19)
+maxHeap.heappush(5)
+maxHeap.heappush(8)
+maxHeap.heappush(22)
+maxHeap.heappush(1)
+maxHeap.heappush(1)
+maxHeap.heappush(29)
+maxHeap.print()
+
+let maxVal = maxHeap.heappop();
+console.log(maxVal);
+maxVal = maxHeap.heappop();
+console.log(maxVal);
+maxVal = maxHeap.heappop();
+console.log(maxVal);
+maxVal = maxHeap.heappop();
+console.log(maxVal);
+maxVal = maxHeap.heappop();
+console.log(maxVal);
