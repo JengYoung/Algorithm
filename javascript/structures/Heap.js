@@ -135,6 +135,7 @@ class MaxHeap extends Heap {
 }
 
 const maxHeap = new MaxHeap();
+maxHeap.heappush(300)
 maxHeap.heappush(23)
 maxHeap.heappush(19)
 maxHeap.heappush(5)
