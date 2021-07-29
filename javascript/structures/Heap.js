@@ -48,7 +48,7 @@ class MinHeap extends Heap {
         }
     }
     heappop() {
-        const min = this.heap[1]
+        const min = this.heap[1];
         // 첫번째 요소만이 있다면 그냥 빼면 됨
         if (this.heap.length <= 2) return this.heap.pop();
         // 첫번째 요소를 없애고, 대신에 현재 마지막 요소를 넣는다.
@@ -61,9 +61,7 @@ class MinHeap extends Heap {
 
         // 오른쪽이 없다면 왼쪽에만 있다는 것. (왼쪽부터 시작하므로)
         if (!this.heap[rightIndex]) {
-            if (this.heap[leftIndex] < this.heap[nowIndex]) {
-                this.swap(leftIndex, nowIndex)
-            }
+            if (this.heap[leftIndex] < this.heap[nowIndex]) this.swap(leftIndex, nowIndex)
             return min;
         }
         // 둘 다 존재하는 구조라면 leftIndex와 rightIndex를 비교하며 검사.
@@ -120,9 +118,7 @@ class MaxHeap extends Heap {
         let [ nowIndex, leftIndex, rightIndex ] = this.updateIndices(1);
         if (!this.heap[leftIndex]) return max;
         if (!this.heap[rightIndex]) {
-            if (this.heap[nowIndex] < this.heap[leftIndex]) {
-                this.swap(nowIndex, leftIndex);
-            }
+            if (this.heap[nowIndex] < this.heap[leftIndex]) this.swap(nowIndex, leftIndex);
             return max;
         };
         while(this.heap[leftIndex] > this.heap[nowIndex] || this.heap[rightIndex] > this.heap[nowIndex]) {
