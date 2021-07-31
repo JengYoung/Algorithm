@@ -30,6 +30,6 @@ function permutations(arr, num) {
     return resArr
 }
 
-const test = [1,2,3,4];
+const test = [0,1,1];
 const result = permutations(test, 3);
 console.log(result)

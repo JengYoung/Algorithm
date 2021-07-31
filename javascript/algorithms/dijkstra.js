@@ -42,7 +42,4 @@ const dist = function(start){
     console.log(v); 
 }
 
-const main = (function(){ dist(1); }());
-
-
-[ 0, 2, 3, 1, 2, 4 ]
+const main = (() => dist(1))();

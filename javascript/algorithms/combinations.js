@@ -20,6 +20,6 @@ function combinations(arr, num) {
     return resArr;
 }
 
-const test = [1,2,3,4];
-const result = combinations(test, 2);
+const test = [0,1,1];
+const result = combinations(test, 3);
 console.log(result)
