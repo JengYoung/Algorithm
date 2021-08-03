@@ -47,7 +47,7 @@ const solution = (number, k) => {
 //     }
 // }
 
-const number = "93219321";
-const k = 4;
+const number = "999";
+const k = 2;
 
-console.log(solution(number, k))
+console.log(solution(number, k)) 
