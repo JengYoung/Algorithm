@@ -5,6 +5,19 @@ class Node {
     }
 }
 
+class Queue {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
+    enqueue(newValue) {
+        const newNode = new Node(newValue);
+        if (this.head === null) {
+            this.head = this.tail = newNode;
+        }
+    }
+}
 class Trie {
     constructor() {
         this.root = new Node();

@@ -34,6 +34,9 @@ class Queue {
     size() {
         return this.rear - this.front;
     }
+    print() {
+        console.log(this.queue)
+    }
 }
 class Node {
     constructor(value) {
@@ -51,11 +54,15 @@ class Tree {
         const queue = new Queue();
         queue.enqueue(this.root);
         while (queue.size()) {
+            console.log(queue)
             const currentNode = queue.dequeue();
-            console.log(currentNode.value);
+            console.log("display: ",currentNode.value);
             if (currentNode.left) queue.enqueue(currentNode.left);
             if (currentNode.right) queue.enqueue(currentNode.right);
         }
+    }
+    print() {
+        console.log(this.root)
     }
 }
 const tree = new Tree(new Node(9));
@@ -65,4 +72,6 @@ tree.root.left.left = new Node(2);
 tree.root.left.right = new Node(5);
 tree.root.right.right = new Node(7);
 tree.root.left.right.right = new Node(4);
+
+tree.print()
 console.log(tree.display())
