@@ -10,7 +10,7 @@
  * 7. 코드로 쓴다. Are you ready?
  */
 
- const solution = (N, number) => {
+const solution = (N, number) => {
     const nCountArr = Array.from(new Array(9), (value, idx) => idx === 0 ? new Set() :  new Set([parseInt(`${N}`.repeat(idx))]));
     for(let i = 1; i < 9; i++) {
         for (let j = 1; j < i; j++) {
@@ -35,4 +35,4 @@
 }
 const N = 5;
 const number = 12;
-console.log(solution(N, number))
+console.log(solution(N, number));
