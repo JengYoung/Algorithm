@@ -35,18 +35,6 @@ function take(limit) {
     }
 }
 
-function zip(a) {
-    return function* (b) {
-        a = a[Symbol.iterator]();
-        b = b[Symbol.iterator]();
-        while (true) {
-            const { value, done } = a.next();
-            const { value: value2, done: done2 } = b.next();
-            if (done && done2) break;
-            yield [value, value2];
-        }
-    }
-}
 
 function makePatterns(length) {
     return function (pattern) {
