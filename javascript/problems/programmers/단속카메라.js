@@ -10,7 +10,6 @@ const solution = routes => {
     })
     return cameraCount
 }
-
 (() => {
     const routes = [[-1, 3], [-5, -1], [3, 56]];
     console.log(solution(routes));
@@ -19,4 +18,4 @@ const solution = routes => {
 (() => {
     const routes = [[-20,15], [-14,-5], [-18,-13], [-5,-3]]
     console.log(solution(routes));
-})()
+})();
