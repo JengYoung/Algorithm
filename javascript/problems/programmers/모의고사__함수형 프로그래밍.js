@@ -1,14 +1,14 @@
-const reduce = (cb) => {
-    return function (acc, iter) {
-        if (!iter) acc = (iter = acc[Symbol.iterator]()).next().value;
-        for (const i of iter) acc = cb(acc, i);
-        return acc;
-    }
-}
-function go(arg, ...fs) {
+const reduce = (cb) => (acc, iter) => {
+    if (!iter) acc = (iter = acc[Symbol.iterator]()).next().value;
+    for (const i of iter) acc = cb(acc, i);
+    return acc;
+};
+
+const go = (arg, ...fs) => {
     return reduce((arg, f) => f(arg))(arg, fs);
-}
-function map(cb) {
+};
+
+const map = cb => {
     return function* (iter) {
         for (const i of iter) yield cb(i);
     };
@@ -89,20 +89,22 @@ function getBestScorer(students) {
         else return acc;
     })({ score: 0, scorer: [] }, students)
 }
+
 const students = [
     { name: 1, pattern: [1,2,3,4,5] }, 
     { name: 2, pattern: [2,1,2,3,2,4,2,5] }, 
     { name: 3, pattern: [3,3,1,1,2,2,4,4,5,5] }
 ]
+
 const solution = (answer) => {
     return go(
         students,
         map(countCorrect(answer)),
         getBestScorer,
-        ({ score, scorer }) => scorer
+        ({ scorer }) => scorer
     )
 }
 
 
-const answer = [1,2,3,4,5];
+const answer = [1,5,2,3,4,5,2,1,4,4,2,5,2];
 console.log(solution(answer));
