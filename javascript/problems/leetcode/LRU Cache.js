@@ -1,7 +1,7 @@
 /**
  * @param {number} capacity
  */
-const LRUCache = function(capacity) {
+ const LRUCache = function(capacity) {
     this.size = capacity;
     this.recentlyUsedOrder = new Map();
 };
@@ -11,14 +11,12 @@ const LRUCache = function(capacity) {
  * @return {number}
  */
 LRUCache.prototype.get = function(key) {
-    if (this.recentlyUsedOrder.get(key) !== undefined) {
-        const value = this.recentlyUsedOrder.get(key);
-        this.recentlyUsedOrder.delete(key);
-        this.recentlyUsedOrder.set(key, value);
-        return value;
-    }
-    console.log(this.recentlyUsedOrder);
-    return -1;
+    const value = this.recentlyUsedOrder.get(key);
+    if (value === undefined) return -1;
+
+    this.recentlyUsedOrder.delete(key);
+    this.recentlyUsedOrder.set(key, value);
+    return value;
 };
 
 /** 
@@ -27,16 +25,13 @@ LRUCache.prototype.get = function(key) {
  * @return {void}
  */
 LRUCache.prototype.put = function(key, value) {
-    console.log(this.recentlyUsedOrder.size)
     if (this.recentlyUsedOrder.get(key) === undefined && this.recentlyUsedOrder.size === this.size) {
         const iter = this.recentlyUsedOrder[Symbol.iterator]();
         const next = iter.next();
-        console.log("여기", next.value[0])
         this.recentlyUsedOrder.delete(next.value[0]);
     }
     this.recentlyUsedOrder.delete(key);
     this.recentlyUsedOrder.set(key, value);
-    console.log(this.recentlyUsedOrder)
 };
 
 /** 
@@ -45,7 +40,6 @@ LRUCache.prototype.put = function(key, value) {
  * var param_1 = obj.get(key)
  * obj.put(key,value)
  */
-
 
 const lRUCache = new LRUCache(2);
 lRUCache.put(1, 1); // cache is {1=1}
