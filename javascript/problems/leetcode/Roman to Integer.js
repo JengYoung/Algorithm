@@ -14,6 +14,12 @@ const convertSymbolIntoValue = symbol => {
     };
     return symbolValues[symbol];
 }
+
+/*
+    1. 문자별 값들을 다 객체에 저장해둔다.
+    2. 예외 상황들에 대해 조건을 달아놓는다.
+    3. s를 스택화 시켜서, 빼면서 값을 계산.
+*/
 const romanToInt = s => {
     let result = 0;
     const sArr = s.split("");
