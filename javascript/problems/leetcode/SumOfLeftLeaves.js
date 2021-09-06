@@ -67,25 +67,14 @@ const sumOfLeftLeaves = (arr) => {
   tree.convertTreeObj(arr);
   return getResult(dfs(tree.root));
 }
-
-const dfs = (node, isLeft = true, res = []) => {
-  if (!node.left && !node.right) {
-    if (isLeft) {
-      res.push(node.value);
-      return res;
-    }
-  }
-  if (node.left) {
-    res = dfs(node.left, true, res);
-  }
-  if (node.right) {
-    res = dfs(node.right, false, res);
-  }
-  return res;
+const dfs = (node, isLeft = false, res = []) => {
+  if (!node.left && !node.right) return isLeft ? [node.value] : [];
+  return [
+      ...res, 
+      ...(node.left ? dfs(node.left, true, res) : []), 
+      ...(node.right ? dfs(node.right, false, res) : [])
+  ];
 }
-
-const getResult = values => {
-  return values.reduce((acc, cur) => acc + cur, 0)
-}
+const getResult = arr => arr.reduce((acc,cur) => acc + cur, 0)
 
 console.log(sumOfLeftLeaves(arr))
