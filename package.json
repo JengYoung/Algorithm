@@ -1,0 +1,24 @@
+{
+  "name": "algorithm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/JengYoung/Algorithm.git.git"
+  },
+  "author": "Jengyoung <young_pallete@naver.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JengYoung/Algorithm.git/issues"
+  },
+  "homepage": "https://github.com/JengYoung/Algorithm.git#readme",
+  "dependencies": {
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "description": ""
+}
