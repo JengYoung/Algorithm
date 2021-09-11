@@ -28,13 +28,25 @@ class Stack {
     size() {
         return this.size;
     }
+
+    print() {
+        const arr = new Array(this.size);
+        let now = this.top;
+        for (let i = this.size - 1; i > -1; i -= 1) {
+            arr[i] = now.value;
+            now = now.next;
+        }
+        return arr;
+    }
 }
 
 const stack = new Stack();
 stack.push(1);
 stack.push(2);
 stack.push(3);
+console.log(stack.print())
 console.log(stack.pop());
 stack.push(4);
+console.log(stack.print())
 console.log(stack.pop());
 console.log(stack.pop());

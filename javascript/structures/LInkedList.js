@@ -1,6 +1,5 @@
 class LinkedList {
     constructor(value) {
-        this.length = 0;
         this.head = this.createNewNode(value);
         this.tail = this.head;
         this.length = 1;

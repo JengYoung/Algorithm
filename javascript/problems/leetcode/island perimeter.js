@@ -7,6 +7,17 @@ const islandPerimeter = grid => {
   return getResult(isLandXY);
 }
 
+const getIsLandXY = (grid) => {
+  let arr = [];
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[0].length; j++) {
+      const now = grid[i][j]
+      arr = [...arr, ...(now ? [`${i},${j}`] : [])];
+    }
+  }
+  return arr;
+}
+
 const getResult = (arr) => {
   let result = 0;
   arr.forEach(xy => {
@@ -20,16 +31,6 @@ const getResult = (arr) => {
     result += cnt;
   })
   return result;
-}
-const getIsLandXY = (grid) => {
-  let arr = [];
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[0].length; j++) {
-      const now = grid[i][j]
-      arr = [...arr, ...(now ? [`${i},${j}`] : [])];
-    }
-  }
-  return arr;
 }
 
 const grid = [[0,1]];
