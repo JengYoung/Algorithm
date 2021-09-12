@@ -29,9 +29,9 @@ const solution = (N, number) => {
                 }
             }
         }
-        if (nCountArr[i].has(number)) return i;
+        if (nCountArr[i].has(number)) return nCountArr;
     }
-    return -1;
+    return -1
 }
 const N = 5;
 const number = 12;

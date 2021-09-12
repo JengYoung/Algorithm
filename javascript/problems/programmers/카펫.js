@@ -18,3 +18,30 @@ const solution = (brown, yellow) => {
     // 만약 답이 없을 경우
     return -1;
 }
+
+/*
+    다른 풀이
+*/
+
+(() => {
+  const findRow = (brown, yellow) => {
+    const allGridCnt = brown + yellow;
+    let rowcolSum = (brown + 4) / 2 
+    let row = rowcolSum;
+    let col = 0;
+    while (rowcolSum > 0) {
+      row -= 1;
+      col += 1;
+      rowcolSum -= 1;
+      if (row * col === allGridCnt) return [row, col]
+    }
+  }
+    
+  const solution = (brown, yellow) => {
+    return findRow(brown, yellow);
+  }
+    
+  const brown = 10;
+  const yellow = 2;
+  console.log(solution(brown, yellow))
+})()
