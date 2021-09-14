@@ -2,10 +2,7 @@
   s가 주어졌을 때, 최대 하나를 삭제한 후에 펠린드롬인지를 판별하세요.
  */
 
-const validPalindrome = s => {
-  return isPalindrome(s) ? true : false;
-}
-
+const validPalindrome = s => isPalindrome(s);
 const isPalindrome = (s, prevFront, prevRear) => {
   let front = prevFront || 0;
   let rear = prevRear || s.length - 1;
