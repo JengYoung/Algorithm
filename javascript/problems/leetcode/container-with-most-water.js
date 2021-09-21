@@ -3,6 +3,7 @@ const maxArea = height => {
   let start = 0;
   let end = height.length - 1;
   let maxArea = 0;
+
   while (start <= end) {
     const nowStartHeight = height[start];
     const nowEndHeight = height[end];
@@ -11,9 +12,11 @@ const maxArea = height => {
     if (nowStartHeight < nowEndHeight) start += 1;
     else end -= 1;
   }
+
   function getArea(startHeight, endHeight) {
     return Math.min(startHeight, endHeight) * (end - start);
   }
+  
   return maxArea
 }
 
