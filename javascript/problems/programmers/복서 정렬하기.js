@@ -15,7 +15,7 @@ const solution = (weights, head2head) => {
         || thirdSortStandard 
         || fourthSortStandard;
     })
-    .map(([head, weight, idx]) => idx + 1)
+    .map(([_, _, idx]) => idx + 1)
 }
 
 const firstSortCallback = (scores) => {
