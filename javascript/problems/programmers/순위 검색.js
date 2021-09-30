@@ -10,8 +10,7 @@ const binarySearch = (arr, target) => {
 
     mid = Math.floor((left + right) / 2);
   }
-  // 가장 작은 값이 -1가 나오는데요, 이를 +1 처리해줄 겁니다. 
-  // 그럼 반환되는 최솟값이, 0이겠죠?
+  console.log(arr, target, mid);
   return mid + 1; 
 }
 
@@ -39,16 +38,19 @@ const getResult = (infos, query, score) => {
 
 const solution = (info, query) => {
   let answer = [];
-  const infos = getInfos(info)
-  query
+  const infos = getInfos(info);
+  console.log(infos)
+  const q = query
     .map(q => q
 			.split(/ and | |-/i)
 			.filter(v => v !== ""))
-    .forEach(query => {
-      const score = query.pop();
-      const result = getResult(infos, query, score);
-      answer.push(result)
-    })
+  console.log(q)
+  q.forEach(query => {
+    const score = query.pop();
+    const result = getResult(infos, query, score);
+    console.log(result)
+    answer.push(result)
+  })
   return answer;
 }
 (() => {
