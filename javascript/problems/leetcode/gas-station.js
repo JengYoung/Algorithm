@@ -1,7 +1,9 @@
 const canCompleteCircuit = (gas, cost) => {
-  const total = gas.map((g, i) => g - cost[i]);
+  const total = gas.map((g, i) => g - cost[i]); // 가스 - 비용
   if (total.reduce((acc, cur) => acc + cur, 0) < 0) return -1;
-  let lastIdx = 0;
+  // 여기까지 통과하면 결과가 -1이 아님을 보장한다.
+
+  let lastIdx = 0; // 결과값( 시작하기 적합한 값 )
   let cnt = 0;
   total.forEach((val, idx) => {
     if (cnt + val < 0) {
