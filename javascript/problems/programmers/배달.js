@@ -1,3 +1,4 @@
+// 우선순위 큐 -> 다익스트라의 핵심 자료구조
 class MinHeap {
   constructor() {
     this.heap = [null];
@@ -61,8 +62,9 @@ const solution = (N, road, K) => {
 
   while (minHeap.size) {
     const [nowDist, now] = minHeap.heappop();
-    if (distance[now] < nowDist) continue;
+    if (distance[now] < nowDist) continue; // 이게 더 최단 경로니까!
     for (const [nextCity, nextDist] of graph[now]) {
+      // now에서 갈 수 있는 경로
       let cost = nowDist + nextDist;
       if (cost < distance[nextCity]) {
         distance[nextCity] = cost;
@@ -70,6 +72,7 @@ const solution = (N, road, K) => {
       }
     }
   }
+  console.log(distance);
   return distance.filter((dist) => dist <= K).length;
 };
 
