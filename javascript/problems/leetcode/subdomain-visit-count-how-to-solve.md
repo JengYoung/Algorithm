@@ -26,7 +26,8 @@
     const subdomainVisits = function (cpdomains) {
       const map = new Map();
       cpdomains.forEach((cpdomain) => {
-        const [cp, domain] = cpdomain.split(" ");
+        const [cp, domain] = cpdomain.split(" "); 
+        console.log(cp, domain)
         const domainArr = domain.split(".");
         domainArr.reverse().reduce((acc, cur) => {
           const now = acc ? cur + "." + acc : cur;
