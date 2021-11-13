@@ -16,8 +16,8 @@
    - 인덱스가 바뀐 루트: 부모에게 종속이 된 것이다.
    - 인덱스가 바뀌지 않은 루트: 바뀌지 않았다는 것은 곧 부모에게 속한다는 것이다. 
 따라서, 이를 filter을 통해 `parent`의 인덱스가 변하지 않은 루트를 비교하고, 그 답을 구하면 된다.
-
 ```js
+
 const findParent = (x, parent) => {
   return parent[x] === x ? x : findParent(parent[x], parent);
 };
