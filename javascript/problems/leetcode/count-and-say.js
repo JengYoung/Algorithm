@@ -6,7 +6,7 @@
   따라서 변수로 저장을 해주는 로직을 구현한다.
 */
 
-const updateResult = (result, prevNumsLength, prev) => {
+const getUpdatedResult = (result, prevNumsLength, prev) => {
   return `${result}${prevNumsLength}${prev}`;
 };
 const isLastIndex = (i, length) => i === length - 1;
@@ -24,12 +24,12 @@ const countAndSay = (n) => {
   for (let i = 0; i < prevResultLength; i += 1) {
     const now = prevResult[i];
     if (prevNums.length && prevNums[0] !== now) {
-      result = updateResult(result, prevNums.length, prevNums[0]);
+      result = getUpdatedResult(result, prevNums.length, prevNums[0]);
       prevNums = [];
     }
     prevNums.push(now);
     if (isLastIndex(i, prevResult.length) && prevNums.length) {
-      result = updateResult(result, prevNums.length, prevNums[0]);
+      result = getUpdatedResult(result, prevNums.length, prevNums[0]);
     }
   }
   return result;
