@@ -1,14 +1,15 @@
+const setValue = {
+  S: (data) => data.toString(),
+  D: (data) => Math.pow(data, 2).toString(),
+  T: (data) => Math.pow(data, 3).toString(),
+  "*": (data) => (2 * data).toString(),
+  "#": (data) => (-1 * data).toString(),
+  "+": (strData, nextStrData) => strData + nextStrData,
+};
+
 const getScoresArr = (dartResult) => {
-  let scoresArr = [];
+  const scoresArr = [];
   let isLastDataStr = false;
-  const setValue = {
-    S: (data) => data.toString(),
-    D: (data) => Math.pow(data, 2).toString(),
-    T: (data) => Math.pow(data, 3).toString(),
-    "*": (data) => (2 * data).toString(),
-    "#": (data) => (-1 * data).toString(),
-    "+": (strData, nextStrData) => strData + nextStrData,
-  };
 
   const length = dartResult.length;
   for (let i = 0; i < length; i += 1) {
@@ -17,11 +18,11 @@ const getScoresArr = (dartResult) => {
 
     if (isNowDataStr) {
       const lastScore = scoresArr.pop();
-      if (nowData === "*" && scoresArr.length) {
-        const prevLastScore = scoresArr.pop();
-        scoresArr.push(setValue[nowData](prevLastScore));
-      }
-      scoresArr.push(setValue[nowData](lastScore));
+      scoresArr.push(
+        ...(nowData === "*" && scoresArr.length
+          ? [setValue[nowData](scoresArr.pop()), setValue[nowData](lastScore)]
+          : [setValue[nowData](lastScore)])
+      );
     } else {
       scoresArr.push(
         !i || isLastDataStr ? nowData : setValue["+"](scoresArr.pop(), nowData)
