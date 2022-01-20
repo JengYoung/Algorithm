@@ -1,20 +1,23 @@
-function solution(s) {
-  var answer = 0;
-  let sArr = [...s];
+function solution(s)
+{
+    var answer = 0;
+    let sArr = [...s];
 
-  while (sArr.length) {
-    let nextS = [];
-    for (let i = 0; i < sArr.length; i += 1) {
-      const now = s[i];
-      if (i && nextS[nextS.length - 1] === now) {
-        nextS.pop();
-      } else {
-        nextS.push(now);
-      }
+    while(sArr.length) {
+        let nextArr = [];
+        for (let i = 0; i < sArr.length; i += 1) {
+            const now = sArr[i];
+            if (nextArr[nextArr.length - 1] === now) {
+                nextArr.pop();
+            } else {
+                nextArr.push(now)
+            }
+        }
+        
+        if (sArr.length === nextArr.length) return answer;
+        sArr = nextArr
     }
-    if (sArr.length === nextS.length) return 0;
-    sArr = nextS;
-  }
-  answer = 1;
-  return answer;
+    
+    answer = 1;
+    return answer;
 }
