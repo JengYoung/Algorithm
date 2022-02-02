@@ -34,6 +34,7 @@ class MinHeap {
       this.swap(nowIndex, leftIndex);
       return min;
     }
+
     while (
       leftIndex < this.heap.length - 1 &&
       rightIndex < this.heap.length &&
@@ -63,6 +64,7 @@ class MinHeap {
     [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
   }
 }
+
 const networkDelayTime = (times, n, k) => {
   const minHeap = new MinHeap();
 
