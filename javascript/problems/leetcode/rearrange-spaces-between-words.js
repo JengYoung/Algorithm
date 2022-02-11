@@ -1,24 +1,24 @@
-/**
- * @param {string} text
- * @return {string}
- */
-var reorderSpaces = function (text) {
-  let spaceCnt = 0;
-  let arr = text.split(" ").filter((val) => val);
-  for (let i of text) {
-    if (i === " ") spaceCnt += 1;
-  }
-  if (arr.length === 1) return arr[0] + Array(spaceCnt).fill(" ").join("");
+const makeSpaces = (cnt) => Array(cnt).fill(" ").join("");
 
-  const maximizedSpaceCount = parseInt(spaceCnt / (arr.length - 1));
-  const remainder = spaceCnt % (arr.length - 1);
+const reorderSpaces = (text) => {
+  let spaceNum = 0;
+  let arr = text.split(" ").filter((val) => val);
+  let spaceCnt = arr.length - 1;
+
+  for (let i of text) {
+    spaceNum += i === " ";
+  }
+
+  if (arr.length === 1) return arr[0] + makeSpaces(spaceNum);
+
+  const maximizedSpaceCount = parseInt(spaceNum / spaceCnt);
+  const remainder = spaceNum % spaceCnt;
 
   let result = "";
   for (let i = 0; i < arr.length; i += 1) {
-    result += arr[i];
-    if (i !== arr.length - 1)
-      result += Array(maximizedSpaceCount).fill(" ").join("");
+    result +=
+      arr[i] + (i !== arr.length - 1 ? makeSpaces(maximizedSpaceCount) : "");
   }
 
-  return result + (remainder ? Array(remainder).fill(" ").join("") : "");
+  return result + makeSpaces(remainder);
 };

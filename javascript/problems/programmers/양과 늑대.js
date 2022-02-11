@@ -70,8 +70,6 @@ const solution = (info, edges) => {
 
   return maxSheep;
 };
-<<<<<<< HEAD
-=======
 
 (() => {
   const info = [0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1];
@@ -91,4 +89,3 @@ const solution = (info, edges) => {
 
   console.log(solution(info, edges));
 })();
->>>>>>> 2b59a7d (solve: leetCode - rearrange-spaces-between-words.js)
