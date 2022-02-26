@@ -23,6 +23,7 @@ class Queue {
     return this.rear - this.front;
   }
 }
+
 const queue = new Queue();
 for (let i = 0; i < 1000000; i += 1) {
   queue.enqueue(1);
