@@ -39,24 +39,46 @@ class Trie {
     return true;
   }
 
-  getCorrespondingLyrics(chars, lyricLength) {
+  getCorrespondingLyricsCount(chars, lyricLength) {
     let currentNode = this.root;
+
     for (const char of chars) {
       if (!currentNode.children.has(char)) return 0;
 
       currentNode = currentNode.children.get(char);
     }
+
     return currentNode.childrenLengthCounts[lyricLength] ? currentNode.childrenLengthCounts[lyricLength] : 0;
   }
 }
 
-const trie = new Trie();
-trie.insert("cat");
-trie.insert("can");
-trie.insert("cpn");
-trie.insert("cant");
-console.log(trie.has("cat"));
-console.log(trie.has("can"));
-console.log(trie.has("cap"));
+const solution = (words, queries) => {
+  const result = [];
 
-console.log(trie.getCorrespondingLyrics("ca", 3))
+  const lyricsTrie = new Trie();
+  const reversedLyricsTrie = new Trie();
+  
+  words.forEach(word => {
+    lyricsTrie.insert(word);
+    reversedLyricsTrie.insert([...word].reverse().join(''));
+  })
+
+  queries.forEach(query => {
+    const length = query.length;
+    const check = query.startsWith('?');
+    const queryArr = check ? [...query].reverse() : [...query];
+    while (queryArr[queryArr.length - 1] === '?') {
+      queryArr.pop();
+    }
+    
+    result.push((check ? reversedLyricsTrie : lyricsTrie).getCorrespondingLyricsCount(queryArr.join(''), length))
+  })
+
+  return result;
+}
+
+(() => {
+  const words = ["frodo", "front", "frost", "frozen", "frame", "kakao"];
+  const queries = ["fro??", "????o", "fr???", "fro???", "pro?"];
+  console.log(solution(words, queries));
+})();
