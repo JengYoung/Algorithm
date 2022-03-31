@@ -58,31 +58,17 @@ const dfs = (arr, length, startX, startY, endX, endY, counts) => {
   const compressed = [true, false, false, false, false];
   const nextXYs = getNextXYs(startX, startY, endX, endY);
 
-  compressed.forEach((_, idx) => {
+  compressed.forEach((isCompress, idx) => {
     if (!idx) return;
 
-    const { startX, startY, endX, endY } = nextXYs[idx];
-    compressed[idx] = check(
-      arr,
-      startX,
-      startY,
-      endX,
-      endY,
-      arr[startX][startY]
-    );
-  });
+    const { startX: sX, startY: sY, endX: eX, endY: eY } = nextXYs[idx];
+    isCompress = check(arr, sX, sY, eX, eY, arr[sX][sY]);
 
-  compressed.forEach((bool, idx) => {
-    if (!idx) return;
-
-    const { startX, startY, endX, endY } = nextXYs[idx];
-
-    if (bool) {
-      counts[arr[startX][startY]] += 1;
+    if (isCompress) {
+      counts[arr[sX][sY]] += 1;
       return;
     }
-
-    dfs(arr, parseInt(arr.length / 2), startX, startY, endX, endY, counts);
+    dfs(arr, parseInt(arr.length / 2), sX, sY, eX, eY, counts);
   });
 };
 
