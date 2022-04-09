@@ -47,7 +47,7 @@ const dfs = (arr, length, startX, startY, endX, endY, counts) => {
       counts[checkValue] += 1;
       return;
     }
-  }
+  } // 처음에 4분면 -> 전체가 맞는 경우는 걸러지지 않음 => 예외처리해줌.
 
   if (length === 1) {
     counts[arr[startX][startY]] += 1;
@@ -55,7 +55,7 @@ const dfs = (arr, length, startX, startY, endX, endY, counts) => {
   }
 
   // NOTE: 사분면을 맞춰주기 위해 0은 true로 설정.
-  const compressed = [true, false, false, false, false];
+  const compressed = [true, false, false, false, false]; // 1~4사분면 - 압축됐는지 여부.
   const nextXYs = getNextXYs(startX, startY, endX, endY);
 
   compressed.forEach((isCompress, idx) => {
@@ -68,6 +68,7 @@ const dfs = (arr, length, startX, startY, endX, endY, counts) => {
       counts[arr[sX][sY]] += 1;
       return;
     }
+
     dfs(arr, parseInt(arr.length / 2), sX, sY, eX, eY, counts);
   });
 };
