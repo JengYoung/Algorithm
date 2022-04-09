@@ -72,7 +72,7 @@ const getNextXY = (x, y, direction, xLength, yLength) => {
 };
 
 const bfs = (arr, startX, startY, startDirection, initData) => {
-  const result = [];
+  const result = []; // 현재 방문 x -> 방문하게 만들 거고, 그 다음에 이제 결과 값(순환 사이클이 돌았을 때의 값을 담는 배열)
 
   const queue = [];
   const xLength = arr.length;
@@ -86,21 +86,24 @@ const bfs = (arr, startX, startY, startDirection, initData) => {
     arr[nowX][nowY][1][nowD] = true;
 
     const [nextX, nextY] = getNextXY(nowX, nowY, nowD, xLength, yLength);
-    const nextValue = arr[nextX][nextY][0];
-    const nextDirection = nextDirections[nextValue][nowD];
+    const nextValue = arr[nextX][nextY][0]; // S L R
+    const nextDirection = nextDirections[nextValue][nowD]; // 0 1 2 3
     const nextCount = count + 1;
 
     if (arr[nextX][nextY][1][nextDirection]) {
+      // 만약 방문을 한 곳이라면
       if (
         nextX === startX &&
         nextY === startY &&
         startDirection === nextDirection
       ) {
-        result.push(nextCount);
+        // 순환 사이클이 돌았다면
+        result.push(nextCount); // 추가를 해줌.
       }
       continue;
     }
 
+    // 방문을 안했다면
     queue.push([nextX, nextY, nextDirection, nextCount]);
   }
 
@@ -110,14 +113,15 @@ const bfs = (arr, startX, startY, startDirection, initData) => {
 const solution = (grid) => {
   const result = [];
 
-  const arr = make3DemensionArray(grid);
-  const xLength = arr.length;
-  const yLength = arr[0].length;
+  const arr = make3DemensionArray(grid); // "SL", => [["S", [false, falase, false, false]], ["L", "..."]]
+  const xLength = arr.length; // row 행
+  const yLength = arr[0].length; // col열
 
   for (let i = 0; i < xLength; i += 1) {
     for (let j = 0; j < yLength; j += 1) {
       for (let k = 0; k < 4; k += 1) {
         if (!arr[i][j][1][k]) {
+          // !visited
           result.push(...bfs(arr, i, j, k, [i, j, k, 0])); // nowX, nowY, nowD, count
         }
       }
