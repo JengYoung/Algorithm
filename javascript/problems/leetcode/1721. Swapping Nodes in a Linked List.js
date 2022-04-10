@@ -36,4 +36,3 @@ var swapNodes = function (head, k) {
  * @param {number} target
  * @return {number[]}
  */
-var searchRange = function (nums, target) {};
