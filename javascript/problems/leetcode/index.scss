@@ -1,0 +1,31 @@
+$mobile-size: 480px;
+
+.container {
+  display: flex;
+  @media screen and (max-width: $mobile-size) {
+    display: block;
+  }
+
+  .container__item {
+    width: 100%;
+  }
+
+  .circles {
+    display: flex;
+  }
+
+  .red {
+    background-color: red;
+  }
+  .blue {
+    background-color: blue;
+  }
+
+  .green {
+    background-color: green;
+  }
+
+  .white {
+    background-color: white;
+  }
+}
