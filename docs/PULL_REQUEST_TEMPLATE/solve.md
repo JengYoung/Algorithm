@@ -1,3 +1,12 @@
+---
+name: 문제 해결
+about: 다음과 같이 문제를 해결했어요! 🙌
+title: "[SOLVE]"
+labels: ''
+assignees: ''
+
+---
+
 ## ⚠️ 연결된 이슈를 적어주세요!
 closes #
 
