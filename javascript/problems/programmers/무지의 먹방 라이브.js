@@ -42,8 +42,16 @@ class MinHeap {
       }
     }
 
-    while (this.heap[leftIndex] && this.heap[rightIndex] && Math.min(this.heap[leftIndex][1], this.heap[rightIndex][1]) < this.heap[nowIndex][1]) {
-      const minIndex = this.heap[leftIndex][1] < this.heap[rightIndex][1] ? leftIndex : rightIndex;
+    while (
+      this.heap[leftIndex] &&
+      this.heap[rightIndex] &&
+      Math.min(this.heap[leftIndex][1], this.heap[rightIndex][1]) <
+        this.heap[nowIndex][1]
+    ) {
+      const minIndex =
+        this.heap[leftIndex][1] < this.heap[rightIndex][1]
+          ? leftIndex
+          : rightIndex;
       this.swap(minIndex, nowIndex);
 
       nowIndex = minIndex;
@@ -55,11 +63,11 @@ class MinHeap {
   }
 
   swap(a, b) {
-    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]]
+    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
   }
 
   getHead() {
-    return this.heap[1] ?? null
+    return this.heap[1] ?? null;
   }
 
   size() {
@@ -69,7 +77,7 @@ class MinHeap {
 
 const solution = (food_times, k) => {
   const minHeap = new MinHeap();
-  const numbers = new Map(); // 남은 음식 번호들 
+  const numbers = new Map(); // 남은 음식 번호들
 
   for (let i = 0; i < food_times.length; i += 1) {
     const num = i + 1;
@@ -85,17 +93,18 @@ const solution = (food_times, k) => {
 
   let remainFoodCount = numbers.size; // length
 
-  while (total + (now - last) * remainFoodCount <= k) { // [1000000, 2000000, 3000000] [1, 1000000] 1000000 * 3
+  while (total + (now - last) * remainFoodCount <= k) {
+    // [1000000, 2000000, 3000000] [1, 1000000] 1000000 * 3
     const [nowFoodNum, nowFoodTime] = minHeap.heappop();
     total += (nowFoodTime - last) * remainFoodCount;
-    
+
     numbers.delete(nowFoodNum);
     remainFoodCount -= 1;
 
     last = nowFoodTime;
-    
+
     if (minHeap.getHead()) {
-      now = minHeap.getHead()[1]
+      now = minHeap.getHead()[1];
     } else {
       break;
     }
@@ -103,11 +112,11 @@ const solution = (food_times, k) => {
 
   if (!numbers.size) return -1;
   return [...numbers.keys()][(k - total) % numbers.size]; // (남은 시간 % 내가 지금 이 만큼의 음식 개수 -> 현재 n개의 음식이 남았는데 구해야할 음식이 뭔지!)
-}
+};
 
 (() => {
-  const food_times = [3, 1, 2];	
+  const food_times = [3, 1, 2];
   const k = 5;
 
-  console.log(solution(food_times, k))
+  console.log(solution(food_times, k));
 })();
