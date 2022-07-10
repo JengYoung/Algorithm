@@ -1,11 +1,11 @@
 const equations = [
-  ["a", "c"],
-  ["b", "e"],
-  ["c", "d"],
-  ["e", "d"],
+  ['a', 'c'],
+  ['b', 'e'],
+  ['c', 'd'],
+  ['e', 'd'],
 ];
 const values = [2.0, 3.0, 0.5, 5.0];
-const queries = [["a", "b"]];
+const queries = [['a', 'b']];
 const solution = (equations, values, queries) => {
   const names = {};
   let cnt = 0;
