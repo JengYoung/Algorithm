@@ -4,15 +4,14 @@ function solution(n) {
   const arr = new Array(5000).fill(0);
   arr[0] = 1;
 
-  for (let i = 2; i < n + 1; i += 2) {
-    const newPatternCases = arr
-      .filter((value, idx) => idx <= i - 4 && value)
-      .reduce((acc, cur) => acc + cur, 0);
+  let newPatternCases = 0;
 
-    arr[i] = 3 * arr[i - 2] + 2 * newPatternCases;
+  for (let i = 2; i < n + 1; i += 2) {
+    if (i >= 4) newPatternCases += 2 * arr[i - 4];
+
+    arr[i] = (3 * arr[i - 2] + newPatternCases) % 1000000007;
   }
 
-  return arr[n] % 1000000007;
+  return arr[n];
 }
-
 console.log(solution(6));
