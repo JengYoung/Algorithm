@@ -3,24 +3,69 @@
  * @return {number}
  */
 
-const calcDist = (x1, y1, x2, y2) => {
-  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-};
-
-const makeGraph = (points) => {
-  const arr = [];
-
-  for (let i = 0; i < points.length; i += 1) {
-    const [x1, y1] = points[i];
-
-    for (let j = i + 1; j < points.length; j += 1) {
-      const [x2, y2] = points[j];
-
-      arr.push([i, j, calcDist(x1, y1, x2, y2)]);
-    }
+class MinHeap {
+  constructor() {
+    this.heap = [null];
+    this.size = 0;
   }
 
-  return arr;
+  heappush(value) {
+    this.heap.push(value);
+    let nowIndex = this.heap.length - 1;
+    let parentIndex = Math.floor(nowIndex / 2);
+    while (nowIndex > 1 && this.heap[parentIndex][2] > this.heap[nowIndex][2]) {
+      this.swap(nowIndex, parentIndex);
+      nowIndex = parentIndex;
+      parentIndex = Math.floor(nowIndex / 2);
+    }
+    this.size += 1;
+  }
+
+  heappop() {
+    const returnValue = this.heap[1];
+    this.heap[1] = this.heap.pop();
+
+    let nowIndex = 1;
+    let leftIndex = nowIndex * 2;
+    let rightIndex = nowIndex * 2 + 1;
+
+    if (!this.heap[rightIndex]) {
+      if (
+        this.heap[leftIndex] &&
+        this.heap[nowIndex][2] > this.heap[leftIndex][2]
+      ) {
+        this.swap(nowIndex, leftIndex);
+        return returnValue;
+      }
+    }
+
+    while (
+      this.heap[rightIndex] &&
+      (this.heap[nowIndex][2] > this.heap[leftIndex][2] ||
+        this.heap[nowIndex][2] > this.heap[rightIndex][2])
+    ) {
+      if (this.heap[leftIndex][2] < this.heap[rightIndex][2]) {
+        this.swap(nowIndex, leftIndex);
+        nowIndex = leftIndex;
+      } else {
+        this.swap(nowIndex, rightIndex);
+        nowIndex = rightIndex;
+      }
+
+      leftIndex = nowIndex * 2;
+      rightIndex = nowIndex * 2 + 1;
+    }
+    this.size -= 1;
+    return returnValue;
+  }
+
+  swap(a, b) {
+    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
+  }
+}
+
+const calcDist = (x1, y1, x2, y2) => {
+  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 };
 
 const findParent = (x, parent) => {
@@ -40,14 +85,25 @@ const unionFind = (a, b, parent) => {
 
 const minCostConnectPoints = (points) => {
   let total = 0;
-  let cnt = 0;
+  let cnt = 1;
 
-  const graph = makeGraph(points);
-  graph.sort((a, b) => a[2] - b[2]);
+  const minHeap = new MinHeap();
+
+  for (let i = 0; i < points.length; i += 1) {
+    const [x1, y1] = points[i];
+
+    for (let j = i + 1; j < points.length; j += 1) {
+      const [x2, y2] = points[j];
+
+      minHeap.heappush([i, j, calcDist(x1, y1, x2, y2)]);
+    }
+  }
 
   const parent = Array.from({ length: points.length + 1 }, (_, idx) => idx);
 
-  for (let [from, to, cost] of graph) {
+  while (minHeap.size) {
+    const [from, to, cost] = minHeap.heappop();
+
     if (findParent(from, parent) !== findParent(to, parent)) {
       unionFind(from, to, parent);
       total += cost;
