@@ -2,28 +2,17 @@ class Node {
   constructor(value = '') {
     this.value = value;
     this.children = new Map();
+    this.cnt = 0;
   }
 }
 
-class Queue {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-    this.size = 0;
-  }
-  enqueue(newValue) {
-    const newNode = new Node(newValue);
-    if (this.head === null) {
-      this.head = this.tail = newNode;
-    }
-  }
-}
 class Trie {
   constructor() {
     this.root = new Node();
   }
   insert(string) {
     let currentNode = this.root;
+    currentNode.cnt += 1;
 
     for (const char of string) {
       if (!currentNode.children.has(char)) {
@@ -31,24 +20,37 @@ class Trie {
       }
 
       currentNode = currentNode.children.get(char);
+      currentNode.cnt += 1;
     }
   }
-  has(string) {
-    let currentNode = this.root;
 
+  getCount(string) {
+    let cnt = 0;
+    let currentNode = this.root;
     for (const char of string) {
-      if (!currentNode.children.has(char)) {
-        return false;
-      }
+      cnt += 1;
+
       currentNode = currentNode.children.get(char);
+      if (currentNode.cnt === 1) break;
     }
-    return true;
+
+    return cnt;
   }
 }
 
-const trie = new Trie();
-trie.insert('cat');
-trie.insert('can');
-console.log(trie.has('cat'));
-console.log(trie.has('can'));
-console.log(trie.has('cap'));
+const solution = (words) => {
+  let result = 0;
+  const trie = new Trie();
+
+  for (let i = 0; i < words.length; i += 1) {
+    trie.insert(words[i]);
+  }
+
+  for (let i = 0; i < words.length; i += 1) {
+    result += trie.getCount(words[i]);
+  }
+
+  return result;
+};
+
+console.log(solution(['word', 'war', 'warrior', 'world']));
