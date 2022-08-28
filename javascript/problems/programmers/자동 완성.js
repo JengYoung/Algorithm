@@ -2,7 +2,6 @@ class Node {
   constructor(value = '') {
     this.value = value;
     this.children = new Map();
-    this.isSearched = false;
     this.cnt = 0;
   }
 }
@@ -23,9 +22,8 @@ class Trie {
       currentNode = currentNode.children.get(char);
       currentNode.cnt += 1;
     }
-
-    currentNode.isSearched = true;
   }
+
   getCount(string) {
     let cnt = 0;
     let currentNode = this.root;
