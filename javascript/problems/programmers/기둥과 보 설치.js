@@ -1,17 +1,17 @@
 class BuildMap {
-  _PILLAR_CODE = 0;
-  _FLOOR_CODE = 1;
-  _COMMAND_ADD_CODE = 1;
-  _COMMAND_DELETE_CODE = 0;
+  #PILLAR_CODE = 0;
+  #FLOOR_CODE = 1;
+  #COMMAND_ADD_CODE = 1;
+  #COMMAND_DELETE_CODE = 0;
 
-  _BuildTypes = Object.freeze({
-    [this._PILLAR_CODE]: '기둥',
-    [this._FLOOR_CODE]: '보',
+  #BuildTypes = Object.freeze({
+    [this.#PILLAR_CODE]: '기둥',
+    [this.#FLOOR_CODE]: '보',
   });
 
-  _CommandTypes = Object.freeze({
-    [this._COMMAND_DELETE_CODE]: '삭제',
-    [this._COMMAND_ADD_CODE]: '추가',
+  #CommandTypes = Object.freeze({
+    [this.#COMMAND_DELETE_CODE]: '삭제',
+    [this.#COMMAND_ADD_CODE]: '추가',
   });
 
   constructor(n) {
@@ -24,21 +24,29 @@ class BuildMap {
 
   checkBuild(x, y, buildType, commandType) {
     const commands = {
-      [this._CommandTypes[this._COMMAND_DELETE_CODE]]: {
-        [this._BuildTypes[this._PILLAR_CODE]]:
-          this.checkDeletePillarPossible.bind(this),
-        [this._BuildTypes[this._FLOOR_CODE]]:
-          this.checkDeleteFloorPossible.bind(this),
+      [this.#CommandTypes[this.#COMMAND_DELETE_CODE]]: {
+        [this.#BuildTypes[this.#PILLAR_CODE]]:
+          this.checkDeletePillarPossible.bind(this, x, y),
+        [this.#BuildTypes[this.#FLOOR_CODE]]:
+          this.checkDeleteFloorPossible.bind(this, x, y),
       },
-      [this._CommandTypes[this._COMMAND_ADD_CODE]]: {
-        [this._BuildTypes[this._PILLAR_CODE]]:
-          this.checkAddPillarPossible.bind(this),
-        [this._BuildTypes[this._FLOOR_CODE]]:
-          this.checkAddFloorPossible.bind(this),
+      [this.#CommandTypes[this.#COMMAND_ADD_CODE]]: {
+        [this.#BuildTypes[this.#PILLAR_CODE]]: this.possibleAdd.bind(
+          this,
+          x,
+          y,
+          this.#PILLAR_CODE
+        ),
+        [this.#BuildTypes[this.#FLOOR_CODE]]: this.possibleAdd.bind(
+          this,
+          x,
+          y,
+          this.#FLOOR_CODE
+        ),
       },
     };
 
-    return commands[commandType][buildType](x, y);
+    return commands[commandType][buildType]();
   }
 
   isValidPillar(x, y) {
@@ -63,40 +71,30 @@ class BuildMap {
     if (y <= 0) return false;
 
     // 한쪽 끝 부분이 기둥 위에 있는 경우
-    if (this.arr[x][y - 1][this._PILLAR_CODE]) return true;
-    if (this.arr[x + 1][y - 1][this._PILLAR_CODE]) return true;
+    if (this.arr[x][y - 1][this.#PILLAR_CODE]) return true;
+    if (this.arr[x + 1][y - 1][this.#PILLAR_CODE]) return true;
 
     // 다른 보와 동시에 연결되어 있을 경우
     if (
       x &&
-      this.arr[x - 1][y][this._FLOOR_CODE] &&
-      this.arr[x + 1][y][this._FLOOR_CODE]
+      this.arr[x - 1][y][this.#FLOOR_CODE] &&
+      this.arr[x + 1][y][this.#FLOOR_CODE]
     )
       return true;
 
     return false;
   }
 
-  checkAddPillarPossible(x, y) {
-    if (this.arr[x][y][this._PILLAR_CODE]) return false;
+  possibleAdd(x, y, buildTypeCode) {
+    if (this.arr[x][y][buildTypeCode]) return false;
 
-    this.arr[x][y][this._PILLAR_CODE] = true;
+    this.arr[x][y][buildTypeCode] = true;
 
-    const result = this.isValidPillar(x, y);
+    const result = buildTypeCode
+      ? this.isValidFloor(x, y)
+      : this.isValidPillar(x, y);
 
-    this.arr[x][y][this._PILLAR_CODE] = false;
-
-    return result;
-  }
-
-  checkAddFloorPossible(x, y) {
-    if (this.arr[x][y][this._FLOOR_CODE]) return false;
-
-    this.arr[x][y][this._FLOOR_CODE] = true;
-
-    const result = this.isValidFloor(x, y);
-
-    this.arr[x][y][this._FLOOR_CODE] = false;
+    this.arr[x][y][buildTypeCode] = false;
 
     return result;
   }
@@ -110,15 +108,15 @@ class BuildMap {
   }
 
   checkDeletePillarPossible(x, y) {
-    if (!this.arr[x][y][this._PILLAR_CODE]) return false;
+    if (!this.arr[x][y][this.#PILLAR_CODE]) return false;
 
-    this.delete(x, y, this._PILLAR_CODE);
+    this.delete(x, y, this.#PILLAR_CODE);
 
     // pillar
     // 내 위에 기둥이 있을 경우.
     const overPillarStandPossible =
       y + 1 >= this.mapSize ||
-      !this.arr[x][y + 1][this._PILLAR_CODE] ||
+      !this.arr[x][y + 1][this.#PILLAR_CODE] ||
       this.isValidPillar(x, y + 1);
 
     // 위쪽의 보가 없거나, 지탱할 만한 뭔가가 있어야 한다.
@@ -131,7 +129,7 @@ class BuildMap {
     const nowOverLeftFloorStandPossible =
       x - 1 < 0 ||
       y + 1 >= this.mapSize ||
-      !this.arr[x - 1][y + 1][this._FLOOR_CODE] ||
+      !this.arr[x - 1][y + 1][this.#FLOOR_CODE] ||
       this.isValidFloor(x - 1, y + 1);
 
     const result =
@@ -139,7 +137,7 @@ class BuildMap {
       nowOverFloorStandPossible &&
       nowOverLeftFloorStandPossible;
 
-    this.backupBeforeDelete(x, y, this._PILLAR_CODE);
+    this.backupBeforeDelete(x, y, this.#PILLAR_CODE);
 
     return result;
   }
@@ -147,29 +145,29 @@ class BuildMap {
   checkDeleteFloorPossible(x, y) {
     if (!this.arr[x][y][1]) return false;
 
-    this.delete(x, y, this._FLOOR_CODE);
+    this.delete(x, y, this.#FLOOR_CODE);
 
     // floor
     // 만약 현재 위치에 기둥이 있다면 유효한지 체크
     const isPillarStandPossible =
-      !this.arr[x][y][this._PILLAR_CODE] || this.isValidPillar(x, y);
+      !this.arr[x][y][this.#PILLAR_CODE] || this.isValidPillar(x, y);
 
     // 현재의 오른쪽에 세워진 기둥도 유효한지 체크.
     const isRightPillarStandPossible =
       x + 1 >= this.mapSize ||
-      !this.arr[x + 1][y][this._PILLAR_CODE] ||
+      !this.arr[x + 1][y][this.#PILLAR_CODE] ||
       this.isValidPillar(x + 1, y);
 
     // 현재의 왼쪽 보도 유효한지 체크
     const isLeftFloorStandPossible =
       x - 1 < 0 ||
-      !this.arr[x - 1][y][this._FLOOR_CODE] ||
+      !this.arr[x - 1][y][this.#FLOOR_CODE] ||
       this.isValidFloor(x - 1, y);
 
     // 현재의 오른쪽 보도 유효한지 체크
     const isRightFloorStandPossible =
       x + 1 >= this.mapSize ||
-      !this.arr[x + 1][y][this._FLOOR_CODE] ||
+      !this.arr[x + 1][y][this.#FLOOR_CODE] ||
       this.isValidFloor(x + 1, y);
 
     const result =
@@ -178,7 +176,7 @@ class BuildMap {
       isLeftFloorStandPossible &&
       isRightFloorStandPossible;
 
-    this.backupBeforeDelete(x, y, this._FLOOR_CODE);
+    this.backupBeforeDelete(x, y, this.#FLOOR_CODE);
 
     return result;
   }
@@ -196,8 +194,8 @@ class BuildMap {
         this.checkBuild(
           x,
           y,
-          this._BuildTypes[buildCode],
-          this._CommandTypes[commandCode]
+          this.#BuildTypes[buildCode],
+          this.#CommandTypes[commandCode]
         )
       ) {
         this.updateBuildMap(x, y, buildCode, commandCode);
