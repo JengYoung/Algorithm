@@ -22,6 +22,7 @@ const readline = require('readline');
 
 function main(inputs) {
   const [position, ...bombs] = inputs;
+  /* eslint-disable-next-line */
   const [len, bombCnt] = position;
 
   const check = (x, y) => x >= 1 && x <= len && y >= 1 && y <= len;
