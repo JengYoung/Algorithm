@@ -4,68 +4,29 @@ const readline = require('readline');
 (async () => {
   let rl = readline.createInterface({ input: process.stdin });
 
-  const inputs = [];
+  for await (const line of rl) {
+    console.log(main(line));
+    rl.close();
+  }
 
-  rl.on('line', (line) => inputs.push(line.trim().split(' '))).on(
-    'close',
-    () => {
-      main(inputs);
-
-      process.exit();
-    }
-  );
+  process.exit();
 })();
 
-class Queue {
-  constructor() {
-    this.queue = [];
-    this.front = 0;
-    this.rear = 0;
-  }
-  enqueue(value) {
-    this.queue[this.rear++] = value;
-  }
+function main(n) {
+  const numberN = Number(n);
+  const dp = [];
+  const mod = 100000007;
 
-  dequeue() {
-    const value = this.queue[this.front];
-    delete this.queue[this.front];
-    this.front += 1;
-    return value;
-  }
+  dp.push(0);
+  dp.push(0);
+  dp.push(1);
 
-  get head() {
-    return this.queue[this.front];
+  for (let i = 3; i < numberN + 1; i += 1) {
+    dp.push(
+      (2 * (i - 1) + 1) * (dp[dp.length - 1] % mod) + (dp[dp.length - 2] % mod)
+    );
+    dp.shift();
   }
 
-  get length() {
-    return this.rear - this.front;
-  }
-}
-
-function main(inputs) {
-  const [position, ...transactions] = inputs;
-  const [N, M] = position;
-
-  let result = N;
-
-  const queue = new Queue();
-
-  for (let i = 0; i < M; i += 1) {
-    const [command, money] = transactions[i];
-
-    if (command === 'deposit') {
-      result += money;
-    } else if (command === 'pay') {
-      if (result < money) continue;
-      result -= money;
-    } else {
-      queue.push(money);
-    }
-
-    while (queue.length && queue.haed < result) {
-      result -= queue.pop();
-    }
-  }
-
-  console.log(result);
+  return dp[dp.length - 1] % mod;
 }
