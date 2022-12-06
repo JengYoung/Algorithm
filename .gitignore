@@ -1,2 +1,6 @@
 javascript/test/
 node_modules
+
+tips/test*
+
+**/*test*

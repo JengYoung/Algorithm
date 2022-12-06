@@ -3,94 +3,56 @@ const readline = require('readline');
 
 (async () => {
   let rl = readline.createInterface({ input: process.stdin });
+
   const inputs = [];
 
   rl.on('line', (line) => inputs.push(line)).on('close', () => {
-    const [N, K] = inputs[0].trim().split(' ').map(Number);
-    const arr = [];
+    const [N, K] = inputs[0].split(' ').map(Number);
+    const graph = {};
 
-    for (let i = 1; i < inputs.length - 1; i += 1) {
-      arr.push(inputs[i].trim().split(' ').map(Number));
+    for (let i = 1; i < N; i += 1) {
+      const [a, b] = inputs[i].split(' ').map(Number);
+
+      graph[a] = graph[a] ? [...graph[a], b] : [b];
+      graph[b] = graph[b] ? [...graph[b], a] : [a];
     }
 
-    const A = [0, ...inputs[inputs.length - 1].trim().split(' ').map(Number)];
+    const A = [0, ...(inputs[inputs.length - 1].split(' ').map(Number) ?? [])];
 
-    main(N, K, arr, A);
+    main(N, K, graph, A);
   });
 })();
 
-class Queue {
-  constructor() {
-    this.queue = [];
-    this.front = 0;
-    this.rear = 0;
-  }
+function main(N, K, G, A) {
+  let result = 0;
 
-  enqueue(value) {
-    this.queue[this.rear++] = value;
-  }
+  const dp = Array.from({ length: K + 1 }, () => new Set());
+  dp[0].add(0);
 
-  dequeue() {
-    const value = this.queue[this.front];
-    delete this.queue[this.front];
-    this.front += 1;
-    return value;
-  }
+  const DPS = (cur, prev) => {
+    for (let i = 0; i < K + 1; i += 1) {
+      if (dp[i].has(prev)) {
+        dp[i].add(cur);
 
-  peek() {
-    return this.queue[this.front];
-  }
+        const nowCap = i + A[cur];
+        if (nowCap <= K) {
+          dp[nowCap].add(cur);
 
-  get length() {
-    return this.rear - this.front;
-  }
-}
-
-function main(N, K, V, A) {
-  let maxValue = 0;
-  const graph = {};
-
-  V.forEach(([a, b]) => {
-    graph[a] = [...(graph[a] ?? []), b];
-    graph[b] = [...(graph[b] ?? []), a];
-  });
-
-  const queue = new Queue();
-  const initSize = A[1] <= K ? A[1] : 0;
-
-  queue.enqueue([1, initSize, new Set([1])]);
-
-  while (queue.length) {
-    const [now, trash, visited] = queue.dequeue();
-
-    maxValue = Math.max(trash, maxValue);
-
-    if (maxValue === K) {
-      console.log(maxValue);
-      return;
-    }
-
-    if (graph[now]) {
-      for (const nxt of graph[now]) {
-        if (!visited.has(nxt)) {
-          const nextSize = trash + A[nxt];
-
-          if (nextSize === K) {
-            console.log(trash + A[nxt]);
-            return;
-          }
-
-          if (nextSize < K) {
-            queue.enqueue([nxt, nextSize, new Set([...visited, nxt])]);
-          }
-
-          if (trash !== nextSize) {
-            queue.enqueue([nxt, trash, new Set([...visited, nxt])]);
-          }
+          result = Math.max(result, nowCap);
         }
       }
     }
-  }
 
-  console.log(maxValue);
+    if (G[cur]) {
+      for (const nxt of G[cur]) {
+        if (nxt !== prev) {
+          DPS(nxt, cur);
+        }
+      }
+    }
+  };
+
+  DPS(1, 0);
+
+  console.log(result);
 }
