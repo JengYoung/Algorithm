@@ -26,7 +26,7 @@ function after(n, count) {
 
   for (let row = 2; row < n + 1; row += 1) {
     const prevRow = row - 1;
-    const nextColLength = Math.min(count, prevRow);
+    const nextColLength = Math.min(count, row);
 
     for (let col = 1; col <= nextColLength; col += 1) {
       arr[row][col] =
