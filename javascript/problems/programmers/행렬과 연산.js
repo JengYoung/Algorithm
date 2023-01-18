@@ -99,6 +99,18 @@ class Deque {
     return node.value;
   }
 
+  get rawArray() {
+    let arr = [];
+    let node = this.front;
+
+    for (let i = 0; i < this.count; i += 1) {
+      arr.push(node.value);
+      node = node.next;
+    }
+
+    return arr;
+  }
+
   get length() {
     return this.count;
   }
@@ -237,20 +249,16 @@ class RotateMatrixArrayPrinterStrategy {
   print() {
     let result = [];
 
-    const matrixLength = this.matrix.main.length;
-    for (let i = 0; i < matrixLength; i += 1) {
+    const leftArr = this.matrix.left.rawArray;
+    const mainArr = this.matrix.main.rawArray;
+    const rightArr = this.matrix.right.rawArray;
+
+    for (let i = 0; i < mainArr.length; i += 1) {
       const row = [];
 
-      row.push(this.matrix.left.shift());
-
-      const shiftedMain = this.matrix.main.shift();
-      const shiftedMainLength = shiftedMain.length;
-
-      for (let j = 0; j < shiftedMainLength; j += 1) {
-        row.push(shiftedMain.shift());
-      }
-
-      row.push(this.matrix.right.shift());
+      row.push(leftArr[i]);
+      row.push(...mainArr[i].rawArray);
+      row.push(rightArr[i]);
 
       result.push(row);
     }
