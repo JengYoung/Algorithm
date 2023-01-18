@@ -243,7 +243,7 @@ class RotateMatrixArrayPrinterStrategy {
 
       row.push(this.matrix.left.shift());
 
-      const shiftedMain = this.matrix.main.getValue(i);
+      const shiftedMain = this.matrix.main.shift();
       const shiftedMainLength = shiftedMain.length;
 
       for (let j = 0; j < shiftedMainLength; j += 1) {
