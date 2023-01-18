@@ -241,15 +241,16 @@ class RotateMatrixArrayPrinterStrategy {
     for (let i = 0; i < matrixLength; i += 1) {
       const row = [];
 
-      row.push(this.matrix.left.getValue(i));
+      row.push(this.matrix.left.shift());
 
       const shiftedMain = this.matrix.main.getValue(i);
+      const shiftedMainLength = shiftedMain.length;
 
-      for (let j = 0; j < shiftedMain.length; j += 1) {
-        row.push(shiftedMain.getValue(j));
+      for (let j = 0; j < shiftedMainLength; j += 1) {
+        row.push(shiftedMain.shift());
       }
 
-      row.push(this.matrix.right.getValue(i));
+      row.push(this.matrix.right.shift());
 
       result.push(row);
     }
