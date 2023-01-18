@@ -45,6 +45,7 @@ class Deque {
       this.init();
     } else {
       this.front = this.front.next;
+      this.front.prev = null;
       this.count -= 1;
     }
 
@@ -80,6 +81,7 @@ class Deque {
       this.init();
     } else {
       this.rear = this.rear.prev;
+      this.rear.next = null;
       this.count -= 1;
     }
 
@@ -95,6 +97,22 @@ class Deque {
     }
 
     return node.value;
+  }
+
+  get rawArray() {
+    let arr = [];
+    let node = this.front;
+
+    for (let i = 0; i < this.count; i += 1) {
+      arr.push(node.value);
+      node = node.next;
+    }
+
+    return arr;
+  }
+
+  get length() {
+    return this.count;
   }
 }
 
