@@ -141,7 +141,7 @@ class Queue {
   }
 }
 
-class MatrixCommandar {
+class MatrixCommander {
   constructor({ commands }) {
     this.taskQueue = new Queue();
     this._init(commands);
@@ -269,20 +269,20 @@ class RotateMatrixArrayPrinterStrategy {
 
 class MatrixCalculator {
   constructor({ commands, matrix, printerStrategy }) {
-    this.commandar = commands;
+    this.commander = commands;
     this.matrix = matrix;
     this.printerStrategy = printerStrategy;
   }
 
   run() {
-    while (this.commandar.commandLength) {
-      const [command, count] = this.commandar.command();
+    while (this.commander.commandLength) {
+      const [command, count] = this.commander.command();
 
-      if (command === this.commandar.TYPE_SHIFT_ROW) {
+      if (command === this.commander.TYPE_SHIFT_ROW) {
         this.matrix.shiftRow(count);
       }
 
-      if (command === this.commandar.TYPE_ROTATE) {
+      if (command === this.commander.TYPE_ROTATE) {
         this.matrix.rotate(count);
       }
     }
@@ -297,7 +297,7 @@ const solution = (rc, operations) => {
   const matrix = new Matrix(rc);
 
   const matrixCalculator = new MatrixCalculator({
-    commands: new MatrixCommandar({ commands: operations }),
+    commands: new MatrixCommander({ commands: operations }),
     matrix,
     printerStrategy: new RotateMatrixArrayPrinterStrategy(matrix),
   });
