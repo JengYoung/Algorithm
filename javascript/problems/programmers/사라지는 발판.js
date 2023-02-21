@@ -16,9 +16,9 @@ const directions = [
 ];
 
 function solution(board, aloc, bloc) {
-  const playA = (depth, a, b, board) => {
-    const [ax, ay] = a;
-    const [bx, by] = b;
+  const play = (player, rival, depth, playerPositon, rivalPosition, board) => {
+    const [ax, ay] = playerPositon;
+    const [bx, by] = rivalPosition;
 
     const nowBoard = JSON.parse(JSON.stringify(board));
 
@@ -32,8 +32,17 @@ function solution(board, aloc, bloc) {
       if (check(nowBoard, nx, ny)) {
         nowBoard[ax][ay] = 0;
 
-        const result = playB(depth + 1, [nx, ny], [bx, by], nowBoard);
-        (result.winner === 'A' ? winCaseDepths : loseCaseDepths).push(result);
+        const result = play(
+          rival,
+          player,
+          depth + 1,
+          [bx, by],
+          [nx, ny],
+          nowBoard
+        );
+        (result.winner === player ? winCaseDepths : loseCaseDepths).push(
+          result
+        );
       }
     }
 
@@ -43,80 +52,30 @@ function solution(board, aloc, bloc) {
       ay == by
     ) {
       return {
-        winner: 'A',
+        winner: player,
         depth: depth + 1,
       };
     }
 
     if (winCaseDepths.length) {
       return {
-        winner: 'A',
+        winner: player,
         depth: Math.min(...winCaseDepths.map((v) => v.depth)),
       };
     } else if (loseCaseDepths.length) {
       return {
-        winner: 'B',
+        winner: rival,
         depth: Math.max(...loseCaseDepths.map((v) => v.depth)),
       };
     } else {
       return {
-        winner: 'B',
+        winner: rival,
         depth,
       };
     }
   };
 
-  const playB = (depth, a, b, board) => {
-    const [ax, ay] = a;
-    const [bx, by] = b;
-
-    const nowBoard = JSON.parse(JSON.stringify(board));
-
-    const winCaseDepths = [];
-    const loseCaseDepths = [];
-
-    for (const [dx, dy] of directions) {
-      const nx = bx + dx;
-      const ny = by + dy;
-
-      if (check(nowBoard, nx, ny)) {
-        nowBoard[bx][by] = 0;
-
-        const result = playA(depth + 1, [ax, ay], [nx, ny], nowBoard);
-        (result.winner === 'B' ? winCaseDepths : loseCaseDepths).push(result);
-      }
-    }
-
-    if (
-      (winCaseDepths.length || loseCaseDepths.length) &&
-      ax === bx &&
-      ay == by
-    ) {
-      return {
-        winner: 'B',
-        depth: depth + 1,
-      };
-    }
-
-    if (winCaseDepths.length) {
-      return {
-        winner: 'B',
-        depth: Math.min(...winCaseDepths.map((v) => v.depth)),
-      };
-    } else if (loseCaseDepths.length) {
-      return {
-        winner: 'A',
-        depth: Math.max(...loseCaseDepths.map((v) => v.depth)),
-      };
-    } else {
-      return {
-        winner: 'A',
-        depth,
-      };
-    }
-  };
-
-  const result = playA(0, aloc, bloc, board);
+  const result = play('A', 'B', 0, aloc, bloc, board);
 
   return result.depth;
 }
