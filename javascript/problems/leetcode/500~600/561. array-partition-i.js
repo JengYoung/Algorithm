@@ -1,16 +1,14 @@
-const nums = [6,2,6,5,1,2];
+const nums = [6, 2, 6, 5, 1, 2];
 
 const getResult = (nums) => {
-  return nums
-    .filter((_, idx) => !(idx % 2))
-    .reduce((acc, cur) => acc + cur, 0);
-}
+  return nums.filter((_, idx) => !(idx % 2)).reduce((acc, cur) => acc + cur, 0);
+};
 
-const arrayPairSum = function(nums) {
+const arrayPairSum = function (nums) {
   return getResult(quickSort(nums));
-}
+};
 
-const quickSort = arr => {
+const quickSort = (arr) => {
   if (arr.length < 2) {
     return arr;
   }
@@ -19,7 +17,7 @@ const quickSort = arr => {
   const left = [];
   const right = [];
 
-  arr.forEach(val => {
+  arr.forEach((val) => {
     if (val < pivot) {
       left.push(val);
     } else if (val > pivot) {
@@ -27,7 +25,7 @@ const quickSort = arr => {
     } else {
       pivotArr.push(val);
     }
-  })
+  });
   return quickSort(left).concat(pivotArr, quickSort(right));
-}
-console.log(arrayPairSum(nums))
+};
+console.log(arrayPairSum(nums));
