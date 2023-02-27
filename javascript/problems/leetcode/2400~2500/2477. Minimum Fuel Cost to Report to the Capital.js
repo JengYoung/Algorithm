@@ -9,44 +9,6 @@ const makeGraph = (roads) => {
   return graph;
 };
 
-const checkGoTogether = (total, seats) => total <= seats;
-
-const dfs = (graph, visited, root, liter, seats) => {
-  visited[root] = true;
-
-  if (graph[root].length === 1 && root !== 0) {
-    return { liter: 0, cars: 1, cnt: 1 };
-  }
-
-  const nowLiter = liter;
-  const nowSeats = seats;
-
-  let cars = 1;
-  let nowCnt = 1;
-
-  for (const nextCity of graph[root]) {
-    if (visited[nextCity]) continue;
-
-    const {
-      liter: childLiter,
-      cars: childCars,
-      cnt: childCnt,
-    } = dfs(graph, visited, nextCity, nowLiter, nowSeats);
-
-    if (checkGoTogether(nowCnt + childCnt, seats)) {
-      cars += childCars - 1;
-      nowCnt += childCnt;
-    } else {
-      cars += childCars;
-      nowCnt = nowCnt + childCnt - seats;
-    }
-
-    liter += childCars + childLiter;
-  }
-
-  return { liter, cars, cnt: nowCnt };
-};
-
 /**
  * @param {number[][]} roads
  * @param {number} seats
@@ -54,9 +16,29 @@ const dfs = (graph, visited, root, liter, seats) => {
  */
 const minimumFuelCost = (roads, seats) => {
   const graph = makeGraph(roads);
-  const visited = new Array(roads.length + 1).fill(false);
 
-  return dfs(graph, visited, 0, 0, seats).liter;
+  let cost = 0;
+
+  const dfs = (node, parent) => {
+    let people = 1;
+
+    for (const nextCity of graph[node]) {
+      if (nextCity === parent) continue;
+
+      const childPeople = dfs(nextCity, node);
+
+      people += childPeople;
+    }
+
+    if (parent === null) {
+      return cost;
+    } else {
+      cost += Math.ceil(people / seats);
+      return people;
+    }
+  };
+
+  return dfs(0, null);
 };
 
 {
