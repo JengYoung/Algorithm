@@ -13,36 +13,29 @@ function solution(plans) {
 
   const stack = [];
 
-  const queue = [];
+  sortedPlans.forEach((plan, index) => {
+    let breakTime = index > 0 ? plan[1] - sortedPlans[index - 1][1] : 0;
 
-  sortedPlans.forEach((plan) => {
-    if (!queue.length) {
-      queue.push(plan);
-      return;
+    while (stack.length) {
+      const [nowName, nowTime, nowPeriod] = stack.pop();
+
+      const remainTime = nowPeriod - breakTime;
+
+      if (remainTime <= 0) {
+        breakTime -= nowPeriod;
+        result.push(nowName);
+      } else {
+        stack.push([nowName, nowTime, remainTime]);
+        break;
+      }
     }
 
-    const [lastName, lastTime, lastPeriod] = queue[0];
-    const [planName, planTime, planPeriod] = plan;
-
-    if (lastTime + lastPeriod <= planTime) {
-      queue.shift();
-      result.push(lastName);
-      queue.push(plan);
-      return;
-    }
-
-    queue.shift();
-    stack.push(lastName);
-    queue.push(plan);
+    stack.push(plan);
   });
 
-  while (queue.length) {
-    const plan = queue.shift();
-    result.push(plan[0]);
-  }
-
   while (stack.length) {
-    result.push(stack.pop());
+    const now = stack.pop();
+    result.push(now[0]);
   }
 
   return result;
