@@ -1,13 +1,43 @@
+class ArrayFilter {
+  static of(value) {
+    if (!Array.isArray(value)) {
+      return null;
+    }
+
+    return new ArrayFilter(value);
+  }
+
+  constructor(value) {
+    this._value = value;
+  }
+
+  map(func) {
+    return ArrayFilter.of(this._value.map(func));
+  }
+
+  sort(sortStrategyFunc) {
+    return ArrayFilter.of(this._value.sort(sortStrategyFunc));
+  }
+
+  reverse() {
+    return ArrayFilter.of(this._value.reverse());
+  }
+}
+
+console.log(ArrayFilter.of([1, 2, 3]).map((v) => v + 2));
+
 const getTime = (time) => {
   return time
     .split(':')
     .reduce((acc, cur, index) => acc + (!index ? 60 * +cur : +cur), 0);
 };
 
+const compareValueByIndex = (index) => (a, b) => a[index] - b[index];
+
 const getSortedPlans = (plans) => {
   return plans
     .map(([name, time, period]) => [name, getTime(time), +period])
-    .sort((a, b) => a[1] - b[1]);
+    .sort(compareValueByIndex(1));
 };
 
 const isNoLength = (arr) => !arr.length;
