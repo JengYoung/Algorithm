@@ -7,12 +7,34 @@ class ArrayFilter {
     return new ArrayFilter(value);
   }
 
+  static splitStringToArray(value, separator) {
+    if (['RegExp', 'String'].includes(separator?.constructor?.name)) {
+      return ArrayFilter.of(value.split(separator));
+    }
+  }
+
   constructor(value) {
     this._value = value;
   }
 
+  get numeric() {
+    return ArrayFilter.of(this._value).map((v) => (/^[\d]$/.test(v) ? +v : v));
+  }
+
+  get value() {
+    return this._value;
+  }
+
   map(func) {
     return ArrayFilter.of(this._value.map(func));
+  }
+
+  slice(from, to) {
+    return ArrayFilter.of(this._value.slice(from, to));
+  }
+
+  concat(arr) {
+    return ArrayFilter.of(this._value.concat(arr));
   }
 
   sort(sortStrategyFunc) {
@@ -22,22 +44,69 @@ class ArrayFilter {
   reverse() {
     return ArrayFilter.of(this._value.reverse());
   }
+
+  reduce(func, initialValue) {
+    const result = this._value.reduce(func, initialValue);
+
+    if (ArrayFilter.of(result) === null) {
+      return result;
+    }
+
+    return ArrayFilter.of(result);
+  }
+
+  merge(item) {
+    return ArrayFilter.of([...this._value, item]);
+  }
+
+  removeLast() {
+    return ArrayFilter.of(ArrayFilter.of(this._value).slice(0, -1));
+  }
 }
 
-console.log(ArrayFilter.of([1, 2, 3]).map((v) => v + 2));
+class Iterator {
+  static of(value) {
+    return new Iterator(value);
+  }
+
+  constructor(value) {
+    this._value = value;
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  iter(callback, from, to, ...args) {
+    if (from === to) {
+      return Iterator.of(this._value);
+    }
+
+    return Iterator.of(callback(this._value, from + 1, to, ...args)).iter(
+      callback,
+      from + 1,
+      to,
+      ...args
+    );
+  }
+}
+
+const iterWithHeadMultiply = (value) => (acc, cur, index) =>
+  acc + (!index ? value * +cur : +cur);
 
 const getTime = (time) => {
-  return time
-    .split(':')
-    .reduce((acc, cur, index) => acc + (!index ? 60 * +cur : +cur), 0);
+  return ArrayFilter.splitStringToArray(time, ':').numeric.reduce(
+    iterWithHeadMultiply(60),
+    0
+  );
 };
 
 const compareValueByIndex = (index) => (a, b) => a[index] - b[index];
 
 const getSortedPlans = (plans) => {
-  return plans
+  return ArrayFilter.of(plans)
     .map(([name, time, period]) => [name, getTime(time), +period])
-    .sort(compareValueByIndex(1));
+    .sort(compareValueByIndex(1)).value;
 };
 
 const isNoLength = (arr) => !arr.length;
@@ -80,11 +149,13 @@ const getArrangedProgress = (
 };
 
 const getNextResult = (result, flag, name) => {
-  return flag ? [...result, name] : result;
+  return flag ? ArrayFilter.of(result).merge(name).value : result;
 };
 
 const getNextStack = (stack, flag, item) => {
-  return stack.slice(0, -1).concat(flag ? [item] : []);
+  return ArrayFilter.of(stack)
+    .slice(0, -1)
+    .concat(flag ? [item] : []).value;
 };
 
 const progress = (
@@ -96,7 +167,11 @@ const progress = (
   getNextStack
 ) => {
   if (index === sortedPlans.length) {
-    return result.concat([...stack].reverse().map((v) => v[0]));
+    return ArrayFilter.of(result).concat(
+      ArrayFilter.of(stack)
+        .reverse()
+        .map((v) => v[0]).value
+    ).value;
   }
 
   const breakTime =
