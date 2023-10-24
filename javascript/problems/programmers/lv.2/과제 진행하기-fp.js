@@ -64,33 +64,6 @@ class ArrayFilter {
   }
 }
 
-class Iterator {
-  static of(value) {
-    return new Iterator(value);
-  }
-
-  constructor(value) {
-    this._value = value;
-  }
-
-  get value() {
-    return this._value;
-  }
-
-  iter(callback, from, to, ...args) {
-    if (from === to) {
-      return Iterator.of(this._value);
-    }
-
-    return Iterator.of(callback(this._value, from + 1, to, ...args)).iter(
-      callback,
-      from + 1,
-      to,
-      ...args
-    );
-  }
-}
-
 const iterWithHeadMultiply = (value) => (acc, cur, index) =>
   acc + (!index ? value * +cur : +cur);
 
