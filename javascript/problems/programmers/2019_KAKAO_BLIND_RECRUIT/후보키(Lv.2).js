@@ -99,10 +99,52 @@ class Table {
   }
 }
 
+const hasSubset = (setArr, target) => {
+  return setArr.every(
+    (cmpArr) => !cmpArr.every((value) => target.includes(value))
+  );
+};
+
+const checkIsCandidateKey = (columns, combination, rowLength) => {
+  const res = Array.from({ length: rowLength }, () => []);
+
+  for (let i = 0; i < rowLength; i += 1) {
+    combination.forEach((key) => {
+      res[i].push(columns[key][i]);
+    });
+  }
+
+  return (
+    new Set(res.map((v) => v.join('👋🏻🖐🏻👋🏻세상을바꾸는뱅크몰👋🏻🖐🏻👋🏻'))).size ===
+    rowLength
+  );
+};
+
+const getAllCandidateKeys = (table) => {
+  const result = new Set();
+
+  for (let keyCount = 1; keyCount <= table.colLength; keyCount += 1) {
+    const combinations = comb(table.columnKeys, keyCount);
+
+    combinations.forEach((combination) => {
+      const resultArr = [...result];
+
+      if (
+        hasSubset(resultArr, combination) &&
+        checkIsCandidateKey(table.columns, combination, table.rowLength)
+      ) {
+        result.add(combination);
+      }
+    });
+  }
+
+  return [...result];
+};
+
 const solution = (relations) => {
   const table = new Table(relations);
 
-  return table.columns;
+  return getAllCandidateKeys(table).length;
 };
 
 console.log(
