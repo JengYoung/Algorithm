@@ -17,11 +17,25 @@
   }
   
   fun substract(name: String) {
+      val now = map.get(name) ?: 0;
+      
+      if (now == 1) {
+          map.remove(name);
+          return;
+      }
+      
       map.set(name, (map.get(name) ?: 0) - 1);
   }
   
   fun add(name: String) {
-      map.set(name, (map.get(name) ?: 0) + 1);
+      val now = map.get(name) ?: 0;
+      
+      if (now == -1) {
+          map.remove(name);
+          return;
+      }
+      
+      map.set(name, now + 1);
   }
   
   fun show(): MutableMap<String, Int> {
@@ -33,10 +47,10 @@ class Shopping(shoppingList: ShoppingList, discount: Array<String>) {
     val RANGE_SIZE = 10;
     val LAST_DAY_INDEX = discount.size - RANGE_SIZE + 1;
     
-    var count = 0;
+    val shoppingList = shoppingList;
+    val discount = discount;
     
-    var shoppingList = shoppingList;
-    var discount = discount;
+    var count = 0;
     
     fun run(): Int {
         for (index in 0 until LAST_DAY_INDEX) {
@@ -78,11 +92,7 @@ class Shopping(shoppingList: ShoppingList, discount: Array<String>) {
     private fun isShoppingDay(): Boolean {
         val now = shoppingList.show();
         
-        var remains: Map<String, Int> = now.filter { (key, value) ->
-            value != 0;
-        }
-        
-        return remains.size == 0
+        return now.size == 0
     }
 }
 
