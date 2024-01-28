@@ -26,8 +26,13 @@ var insert = function (intervals, newInterval) {
       return;
     }
 
-    mergedInterval[0] = Math.min(mergedInterval[0], start);
-    mergedInterval[1] = Math.max(mergedInterval[1], end);
+    if (start < mergedInterval[0]) {
+      mergedInterval[0] = start;
+    }
+
+    if (end > mergedInterval[1]) {
+      mergedInterval[1] = end;
+    }
   });
 
   if (!inserted) {
@@ -36,5 +41,3 @@ var insert = function (intervals, newInterval) {
 
   return res;
 };
-
-console.log(insert([[1, 5]], [2, 3]));
