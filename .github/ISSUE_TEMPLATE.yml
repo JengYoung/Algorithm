@@ -1,0 +1,41 @@
+name: '문제 출제'
+description: '설레는 알고리즘 공부! 문제를 한 번 풀어볼까요? 🙆🏻'
+title: '[🕰️ PROBLEM] '
+labels: ['보류 중이에요']
+
+body:
+  - type: markdown
+    attributes:
+      value: '간단하게 문제에 대한 내용을 기술해주세요 🙇🏻‍♂️🙇‍♀️'
+    validations:
+      required: true
+
+  - type: textarea
+    id: 'reference'
+    attributes:
+      label: '링크'
+      description: '문제의 출처가 되는 링크를 첨부해주세요! 🙇🏻‍♂️🙇‍♀️'
+    validations:
+      required: true
+
+  - type: textarea
+    id: 'details'
+    attributes:
+      label: '🤔 가설'
+      description: '문제에 대한 가설을 이미 고민하셨나요? 기술해주세요!'
+      placeholder: |
+        "예시는 다음과 같아요."
+        "1. 해당 문제는 전형적인 그리디 문제이다."
+        "2. 반복문을 순회하고 최대 결과 값을 반환한다."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: 'checks'
+    attributes:
+      label: '🚨 생성하기 전에 꼭! 체크 부탁드려요!!'
+      options:
+        - label: '라벨에서 출제 사이트가 어디인지 설정해주셨나요?'
+          required: true
+        - label: '이슈 브랜치는 꼭 `problem-[[문제번호]]`로 생성해주세요!'
+          required: true
