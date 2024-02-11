@@ -132,3 +132,99 @@ minVal = minHeap.heappop();
 console.log(minVal);
 minVal = minHeap.heappop();
 console.log(minVal);
+
+class MinHeapByArray {
+  constructor(standardIndex) {
+    this.heap = [null];
+    this.sortStandardIndex = standardIndex;
+  }
+
+  heappush(value) {
+    this.heap.push(value);
+    let nowIndex = this.heap.length - 1;
+    let parentIndex = Math.floor(nowIndex / 2);
+    while (
+      nowIndex > 1 &&
+      this.heap[parentIndex][this.sortStandardIndex] >
+        this.heap[nowIndex][this.sortStandardIndex]
+    ) {
+      this.swap(nowIndex, parentIndex);
+      nowIndex = parentIndex;
+      parentIndex = Math.floor(nowIndex / 2);
+    }
+  }
+
+  heappop() {
+    if (this.length === 1) return this.heap.pop();
+    const returnValue = this.heap[1];
+    this.heap[this.sortStandardIndex] = this.heap.pop();
+
+    let nowIndex = 1;
+    let leftIndex = nowIndex * 2;
+    let rightIndex = nowIndex * 2 + 1;
+
+    if (!this.heap[rightIndex]) {
+      if (
+        this.heap[leftIndex] &&
+        this.heap[nowIndex][this.sortStandardIndex] >
+          this.heap[leftIndex][this.sortStandardIndex]
+      ) {
+        this.swap(nowIndex, leftIndex);
+        return returnValue;
+      }
+    }
+
+    while (
+      this.heap[rightIndex] &&
+      (this.heap[nowIndex][this.sortStandardIndex] >
+        this.heap[leftIndex][this.sortStandardIndex] ||
+        this.heap[nowIndex][this.sortStandardIndex] >
+          this.heap[rightIndex][this.sortStandardIndex])
+    ) {
+      if (
+        this.heap[leftIndex][this.sortStandardIndex] <
+        this.heap[rightIndex][this.sortStandardIndex]
+      ) {
+        this.swap(nowIndex, leftIndex);
+        nowIndex = leftIndex;
+      } else {
+        this.swap(nowIndex, rightIndex);
+        nowIndex = rightIndex;
+      }
+
+      leftIndex = nowIndex * 2;
+      rightIndex = nowIndex * 2 + 1;
+    }
+    return returnValue;
+  }
+
+  swap(a, b) {
+    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
+  }
+
+  get length() {
+    return this.heap.length - 1;
+  }
+}
+
+const minHeap2 = new MinHeap2x2Dimension(1);
+minHeap2.heappush([1, 23]);
+minHeap2.heappush([2, 19]);
+minHeap2.heappush([3, 5]);
+minHeap2.heappush([4, 8]);
+minHeap2.heappush([5, 22]);
+minHeap2.heappush([6, 1]);
+minHeap2.heappush([7, 1]);
+minHeap2.heappush([8, 29]);
+console.log(minHeap2.heap);
+
+let minVal2 = minHeap2.heappop();
+console.log(minVal2);
+minVal2 = minHeap2.heappop();
+console.log(minVal2);
+minVal2 = minHeap2.heappop();
+console.log(minVal2);
+minVal2 = minHeap2.heappop();
+console.log(minVal2);
+minVal2 = minHeap2.heappop();
+console.log(minVal2);
