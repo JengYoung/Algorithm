@@ -9,7 +9,7 @@ const lengthOfLongestSubstring = (s) => {
   let maxCnt = 0;
   let cnt = 0;
   const lastIndices = {};
-  s.split("").forEach((char, idx) => {
+  s.split('').forEach((char, idx) => {
     console.log(lastIndices, char, cnt);
     if (!lastIndices.hasOwnProperty(char) || lastIndices[char] < idx - cnt) {
       // idx - cnt : 현재 찾는 길이의 첫 번째 문자 인덱스 위치.
@@ -23,5 +23,38 @@ const lengthOfLongestSubstring = (s) => {
   return maxCnt;
 };
 
-const s = "dvdf";
+const s = 'dvdf';
 console.log(lengthOfLongestSubstring(s));
+
+// NOTE 2년 후의 코드 변화... 많이 깔끔해졌네.
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function (s) {
+  let result = 0;
+
+  let left = 0;
+  let right = 0;
+
+  const set = new Set();
+
+  while (left <= right && right < s.length) {
+    const now = s[right];
+
+    while (set.has(now)) {
+      set.delete(s[left]);
+      left += 1;
+    }
+
+    set.add(now);
+
+    right += 1;
+
+    if (result < set.size) {
+      result = set.size;
+    }
+  }
+
+  return result;
+};
