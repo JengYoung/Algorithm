@@ -1,33 +1,57 @@
+const sortByAsc = (a, b) => a - b;
+
 /**
  * @param {number[]} nums
  * @return {number[][]}
  */
 var threeSum = function (nums) {
-  const result = new Set();
-  const counts = new Map();
+  const result = [];
 
-  const check = (key, target) => {
-    if (key === target && key === 0) {
-      return counts.get(key) >= 3;
-    }
-
-    return counts.has(target) && (key !== target || counts.get(key) > 1);
-  };
-
-  for (let i = 0; i < nums.length; i += 1) {
-    const now = nums[i];
-    counts.set(now, (counts.get(now) ?? 0) + 1);
+  if (nums.length <= 2) {
+    return result;
   }
 
-  counts.forEach((value, key) => {
-    counts.forEach((value, target) => {
-      const sum = key + target;
+  nums.sort(sortByAsc);
 
-      if (check(key, target) && check(key, -sum) && check(target, -sum)) {
-        result.add(JSON.stringify([key, target, -sum].sort()));
+  let end = nums.length - 1;
+
+  while (end >= 2) {
+    let start = 0;
+    let middle = end - 1;
+
+    const third = nums[end];
+
+    while (start < middle) {
+      const first = nums[start];
+      const second = nums[middle];
+
+      const sum = first + second + third;
+
+      if (sum > 0) {
+        middle -= 1;
       }
-    });
-  });
 
-  return [...result].map(JSON.parse);
+      if (sum < 0) {
+        start += 1;
+      }
+
+      if (sum === 0) {
+        result.push([first, second, third]);
+
+        while (second === nums[middle]) {
+          middle -= 1;
+        }
+
+        while (first === nums[start]) {
+          start += 1;
+        }
+      }
+    }
+
+    while (third === nums[end]) {
+      end -= 1;
+    }
+  }
+
+  return result;
 };
