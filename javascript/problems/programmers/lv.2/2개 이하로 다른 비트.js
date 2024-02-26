@@ -1,18 +1,22 @@
 const mask = (v) => {
   const target = BigInt(v);
-  let i = BigInt(v);
 
-  while (true) {
-    i += BigInt(1);
+  const bit = target.toString(2);
 
-    const diffCount = (i ^ target).toString(2).replace(/0/g, '').length;
+  const last0Index = bit.lastIndexOf('0');
 
-    if (diffCount <= 2) {
-      break;
+  if (last0Index > 0) {
+    if (last0Index === bit.length - 1) {
+      return target + 1n;
     }
+
+    const plus = bit.slice(last0Index);
+
+    const diff = BigInt(1n << BigInt(plus.length - 2));
+    return target + (diff > 0n ? diff : 0n);
   }
 
-  return Number(i);
+  return Number(target + BigInt((1n << BigInt(bit.length)) / 2n));
 };
 
 function solution(numbers) {
