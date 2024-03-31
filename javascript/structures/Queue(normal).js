@@ -16,10 +16,10 @@ class Queue {
     this.front += 1;
     return value;
   }
-  peek() {
+  get peek() {
     return this.queue[this.front];
   }
-  size() {
+  get size() {
     return this.rear - this.front;
   }
 }
@@ -30,7 +30,7 @@ for (let i = 0; i < 1000000; i += 1) {
 }
 
 console.time();
-while (queue.size()) {
+while (queue.size) {
   const a = queue.dequeue();
 }
 console.timeEnd();
