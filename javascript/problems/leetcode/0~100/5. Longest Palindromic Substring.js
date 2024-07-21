@@ -1,60 +1,46 @@
-const isPalindrome = (s, prevFront, prevRear) => {
-  let front = prevFront || 0;
-  let rear = prevRear || s.length - 1;
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var longestPalindrome = function (s) {
+  if (s.length === 1) return s;
 
-  while (rear >= front) {
-    if (s[front] !== s[rear]) {
-      return false;
-    };
-    front += 1;
-    rear -= 1;
-  }
-  
-  return true;
-}
+  let result = {
+    start: 0,
+    length: 0,
+  };
 
-// const longestPalindrome = s => {
-//   const INITIAL_STRING = s[0];
-//   const palindromes = [[]];
-//   palindromes.push([INITIAL_STRING]);
+  const getPalindrom = (start, end) => {
+    if (s[start] !== s[end]) return 0;
 
-//   s.split('').forEach((val, idx) => {
-//     if (idx) {
-//       for (let i = 0; i < idx + 1; i += 2) {
-//         const now = s.slice(idx - i, idx + 1);
-//         if (isPalindrome(now)) {
-//           if (palindromes[now.length]) {
-//             if (!palindromes[now.length].includes(now)) palindromes[now.length].push(now)
-//           } else {
-//             palindromes[now.length] = [now]
-//           }
-//         }
-//       }
-//     }
-//   })
-  const longestPalindrome = s => {
-    const INITIAL_STRING = s[0];
-    const palindromes = [[]];
-    palindromes.push([INITIAL_STRING]);
-  
-    s.split('').forEach((val, idx) => {
-      if (idx) {
-        for (let i = 0; i < idx + 1; i += 2) {
-          const now = s.slice(idx - i, idx + 1);
-          if (isPalindrome(now)) {
-            if (palindromes[now.length]) {
-              if (!palindromes[now.length].includes(now)) palindromes[now.length].push(now)
-            } else {
-              palindromes[now.length] = [now]
-            }
-          }
-        }
+    while (true) {
+      start -= 1;
+      end += 1;
+
+      if (start < 0 || end >= s.length || s[start] !== s[end]) {
+        start += 1;
+        end -= 1;
+        break;
       }
-    })
-  return palindromes[palindromes.length - 1][0];
-}
+    }
 
-(() => {
-  const s = "babad";
-  console.log(longestPalindrome(s))
-})()
+    return end - start + 1;
+  };
+
+  for (let i = 0; i < s.length; i += 1) {
+    const oddCase = getPalindrom(i, i);
+    const evenCase = getPalindrom(i, i + 1);
+
+    const maxCase = oddCase > evenCase ? oddCase : evenCase;
+
+    result =
+      result.length > maxCase
+        ? result
+        : {
+            start: i - Math.floor((maxCase - 1) / 2),
+            length: maxCase,
+          };
+  }
+
+  return s.substring(result.start, result.start + result.length);
+};
