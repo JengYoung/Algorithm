@@ -5,27 +5,42 @@
 var longestPalindrome = function (s) {
   if (s.length === 1) return s;
 
-  let result = '';
+  let result = {
+    start: 0,
+    length: 0,
+  };
 
-  const getPalindrom = (start, end, res) => {
-    if (start < 0 || end >= s.length) return res;
+  const getPalindrom = (start, end) => {
+    if (s[start] !== s[end]) return 0;
 
-    const head = s[start];
-    const tail = s[end];
+    while (true) {
+      start -= 1;
+      end += 1;
 
-    return head === tail
-      ? getPalindrom(start - 1, end + 1, head + res + tail)
-      : res;
+      if (start < 0 || end >= s.length || s[start] !== s[end]) {
+        start += 1;
+        end -= 1;
+        break;
+      }
+    }
+
+    return end - start + 1;
   };
 
   for (let i = 0; i < s.length; i += 1) {
-    const oddCase = getPalindrom(i - 1, i + 1, s[i]);
-    const evenCase = getPalindrom(i, i + 1, '');
+    const oddCase = getPalindrom(i, i);
+    const evenCase = getPalindrom(i, i + 1);
 
-    const maxCase = oddCase.length > evenCase.length ? oddCase : evenCase;
+    const maxCase = oddCase > evenCase ? oddCase : evenCase;
 
-    result = result.length > maxCase.length ? result : maxCase;
+    result =
+      result.length > maxCase
+        ? result
+        : {
+            start: i - Math.floor((maxCase - 1) / 2),
+            length: maxCase,
+          };
   }
 
-  return result;
+  return s.substring(result.start, result.start + result.length);
 };
