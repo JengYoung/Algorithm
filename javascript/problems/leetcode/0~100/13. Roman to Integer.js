@@ -1,46 +1,50 @@
+const CompositeRomans = {
+  IV: 4,
+  IX: 9,
+  XL: 40,
+  XC: 90,
+  CD: 400,
+  CM: 900,
+};
+
+const Romans = {
+  I: 1,
+  V: 5,
+  X: 10,
+  L: 50,
+  C: 100,
+  D: 500,
+  M: 1000,
+};
+
 /**
  * @param {string} s
  * @return {number}
  */
-const convertSymbolIntoValue = symbol => {
-    const symbolValues = {
-        I: 1, 
-        V: 5,
-        X: 10,
-        L: 50,
-        C: 100,
-        D: 500,
-        M: 1000,
-    };
-    return symbolValues[symbol];
-}
+var romanToInt = function (s) {
+  let result = 0;
 
-/*
-    1. 문자별 값들을 다 객체에 저장해둔다.
-    2. 예외 상황들에 대해 조건을 달아놓는다.
-    3. s를 스택화 시켜서, 빼면서 값을 계산.
-*/
-const romanToInt = s => {
-    let result = 0;
-    const sArr = s.split("");
-    while (sArr.length) {
-        const now = sArr.pop();
-        const nowSLastSymbol = sArr[sArr.length - 1];
-        if ((now === 'V' || now === 'X') && nowSLastSymbol === 'I') {
-            sArr.pop();
-            result = (now === 'V') ? result + 4 : result + 9;
-        } else if ((now === 'L' || now === 'C') && nowSLastSymbol === 'X') {
-            sArr.pop();
-            result = (now === 'L') ? result + 40 : result + 90;
-        } else if ((now === 'D' || now === 'M') && nowSLastSymbol === 'C') {
-            sArr.pop();
-            result = (now === 'D') ? result + 400 : result + 900;
-        } else {
-            result += convertSymbolIntoValue(now);
-        }
+  let i = 0;
+
+  while (i < s.length) {
+    const now = s[i];
+
+    if (i + 1 < s.length) {
+      const next = s[i + 1];
+      const compositeRoman = now + next;
+
+      if (compositeRoman in CompositeRomans) {
+        result += CompositeRomans[compositeRoman];
+
+        i += 2;
+        continue;
+      }
     }
-    return result;
-};
 
-const s = "MCMXCIV";
-console.log(romanToInt(s))
+    result += Romans[now];
+
+    i += 1;
+  }
+
+  return result;
+};
