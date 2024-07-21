@@ -1,60 +1,31 @@
-const isPalindrome = (s, prevFront, prevRear) => {
-  let front = prevFront || 0;
-  let rear = prevRear || s.length - 1;
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var longestPalindrome = function (s) {
+  if (s.length === 1) return s;
 
-  while (rear >= front) {
-    if (s[front] !== s[rear]) {
-      return false;
-    };
-    front += 1;
-    rear -= 1;
+  let result = '';
+
+  const getPalindrom = (start, end, res) => {
+    if (start < 0 || end >= s.length) return res;
+
+    const head = s[start];
+    const tail = s[end];
+
+    return head === tail
+      ? getPalindrom(start - 1, end + 1, head + res + tail)
+      : res;
+  };
+
+  for (let i = 0; i < s.length; i += 1) {
+    const oddCase = getPalindrom(i - 1, i + 1, s[i]);
+    const evenCase = getPalindrom(i, i + 1, '');
+
+    const maxCase = oddCase.length > evenCase.length ? oddCase : evenCase;
+
+    result = result.length > maxCase.length ? result : maxCase;
   }
-  
-  return true;
-}
 
-// const longestPalindrome = s => {
-//   const INITIAL_STRING = s[0];
-//   const palindromes = [[]];
-//   palindromes.push([INITIAL_STRING]);
-
-//   s.split('').forEach((val, idx) => {
-//     if (idx) {
-//       for (let i = 0; i < idx + 1; i += 2) {
-//         const now = s.slice(idx - i, idx + 1);
-//         if (isPalindrome(now)) {
-//           if (palindromes[now.length]) {
-//             if (!palindromes[now.length].includes(now)) palindromes[now.length].push(now)
-//           } else {
-//             palindromes[now.length] = [now]
-//           }
-//         }
-//       }
-//     }
-//   })
-  const longestPalindrome = s => {
-    const INITIAL_STRING = s[0];
-    const palindromes = [[]];
-    palindromes.push([INITIAL_STRING]);
-  
-    s.split('').forEach((val, idx) => {
-      if (idx) {
-        for (let i = 0; i < idx + 1; i += 2) {
-          const now = s.slice(idx - i, idx + 1);
-          if (isPalindrome(now)) {
-            if (palindromes[now.length]) {
-              if (!palindromes[now.length].includes(now)) palindromes[now.length].push(now)
-            } else {
-              palindromes[now.length] = [now]
-            }
-          }
-        }
-      }
-    })
-  return palindromes[palindromes.length - 1][0];
-}
-
-(() => {
-  const s = "babad";
-  console.log(longestPalindrome(s))
-})()
+  return result;
+};
