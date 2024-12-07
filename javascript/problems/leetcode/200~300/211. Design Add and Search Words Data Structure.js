@@ -14,71 +14,8 @@ class Node {
   }
 }
 
-class Trie {
-  constructor() {
-    this.root = new Node();
-  }
-
-  insert(value) {
-    let nowNode = this.root;
-
-    [...value].forEach((v, idx) => {
-      const isLast = idx === value.length - 1;
-
-      if (!nowNode.children.has(v)) {
-        const node = new Node(v, { isLast });
-
-        nowNode.children.set(v, node);
-      }
-
-      nowNode = nowNode.children.get(v);
-      if (isLast) {
-        nowNode.isLast = isLast;
-      }
-    });
-  }
-
-  search(value) {
-    let flag = false;
-
-    const dfs = (node, values) => {
-      if (!values.length && node.isLast) {
-        flag = true;
-        return;
-      }
-
-      const WILDCARD = '.';
-      const character = values.shift();
-
-      if (character === WILDCARD) {
-        node.children.forEach((nextNode) => {
-          if (flag) {
-            return;
-          }
-
-          dfs(nextNode, [...values]);
-        });
-
-        return;
-      }
-
-      const nextNode = node.children.get(character);
-
-      if (!nextNode) {
-        return;
-      }
-
-      dfs(nextNode, [...values]);
-    };
-
-    dfs(this.root, [...value]);
-
-    return flag;
-  }
-}
-
 var WordDictionary = function () {
-  this.wordDictionary = new Trie();
+  this.root = new Node();
 };
 
 /**
@@ -86,7 +23,23 @@ var WordDictionary = function () {
  * @return {void}
  */
 WordDictionary.prototype.addWord = function (word) {
-  this.wordDictionary.insert(word);
+  let node = this.root;
+
+  for (let i = 0; i < word.length; i += 1) {
+    const char = word[i];
+
+    if (node.children.has(char)) {
+      node = node.children.get(char);
+      continue;
+    }
+
+    const nextNode = new Node(char);
+    node.children.set(char, nextNode);
+
+    node = nextNode;
+  }
+
+  node.isLast = true;
 
   return null;
 };
@@ -96,7 +49,40 @@ WordDictionary.prototype.addWord = function (word) {
  * @return {boolean}
  */
 WordDictionary.prototype.search = function (word) {
-  return this.wordDictionary.search(word);
+  const WILDCARD = '.';
+  let flag = false;
+
+  const recursiveSearch = (node, idx) => {
+    if (flag) {
+      return;
+    }
+
+    if (word.length === idx && node.isLast) {
+      flag = true;
+      return;
+    }
+
+    const char = word[idx];
+
+    if (char === WILDCARD) {
+      for (const childNode of node.children.values()) {
+        recursiveSearch(childNode, idx + 1);
+      }
+
+      return;
+    }
+
+    if (!node.children.has(char)) {
+      return;
+    }
+
+    const nextNode = node.children.get(char);
+    recursiveSearch(nextNode, idx + 1);
+  };
+
+  recursiveSearch(this.root, 0);
+
+  return flag;
 };
 
 /**
