@@ -1,23 +1,68 @@
-function solution(record) {
-  const nicknames = {};
-  const alerts = {};
-  let cnt = 0;
-  record.forEach((val) => {
-    const [status, id, nickname] = val.split(" ");
-    nicknames[id] = nickname ? nickname : nicknames[id];
-    if (status !== "Change") {
-      alerts[cnt] = { id, status };
-      cnt += 1;
+const solution = (record) => {
+  const nameCache = new Map();
+  const logCache = [];
+
+  const createMessage = ({ id, command }) => {
+    const name = nameCache.get(id);
+    if (command === 'Enter') {
+      return `${name}님이 들어왔습니다.`;
+    }
+
+    if (command === 'Leave') {
+      return `${name}님이 나갔습니다.`;
+    }
+
+    throw new Error('Wrong command.');
+  };
+
+  record.forEach((now) => {
+    const [command, id, nickname] = now.split(' ');
+
+    switch (command) {
+      case 'Enter': {
+        nameCache.set(id, nickname);
+
+        logCache.push({
+          command,
+          id,
+        });
+
+        break;
+      }
+
+      case 'Leave': {
+        nameCache.delete(id);
+
+        logCache.push({
+          command,
+          id,
+        });
+        break;
+      }
+
+      case 'Change': {
+        nameCache.set(id, nickname);
+
+        break;
+      }
+
+      default: {
+        throw new Error('Wrong command!');
+      }
     }
   });
-  const result = [];
-  for (let i = 0; i < cnt; i += 1) {
-    const { id, status } = alerts[i];
-    result.push(
-      `${nicknames[id]}님이 ${
-        status === "Enter" ? "들어왔습니다." : "나갔습니다."
-      }`
-    );
-  }
-  return result;
-}
+
+  return logCache.map(createMessage);
+};
+
+(() => {
+  console.log(
+    solution([
+      'Enter uid1234 Muzi',
+      'Enter uid4567 Prodo',
+      'Leave uid1234',
+      'Enter uid1234 Prodo',
+      'Change uid4567 Ryan',
+    ]) // ["Prodo님이 들어왔습니다.", "Ryan님이 들어왔습니다.", "Prodo님이 나갔습니다.", "Prodo님이 들어왔습니다."]
+  );
+})();
