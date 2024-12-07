@@ -5,17 +5,8 @@
  * 4. 다만, 이미 결과가 도출이 되었다면 더이상 재귀를 돌 이유가 없다. 이는 flag를 하나 만들자.
  * 5. search 메서드를 실행한 결과를 반환한다.
  */
-
-class Node {
-  constructor(value, options) {
-    this.value = value;
-    this.isLast = options?.isLast ?? false;
-    this.children = new Map();
-  }
-}
-
 var WordDictionary = function () {
-  this.root = new Node();
+  this.root = {};
 };
 
 /**
@@ -28,13 +19,13 @@ WordDictionary.prototype.addWord = function (word) {
   for (let i = 0; i < word.length; i += 1) {
     const char = word[i];
 
-    if (node.children.has(char)) {
-      node = node.children.get(char);
+    if (char in node) {
+      node = node[char];
       continue;
     }
 
-    const nextNode = new Node(char);
-    node.children.set(char, nextNode);
+    const nextNode = {};
+    node[char] = nextNode;
 
     node = nextNode;
   }
@@ -65,18 +56,22 @@ WordDictionary.prototype.search = function (word) {
     const char = word[idx];
 
     if (char === WILDCARD) {
-      for (const childNode of node.children.values()) {
-        recursiveSearch(childNode, idx + 1);
+      for (const char in node) {
+        if (char === 'isLast') {
+          continue;
+        }
+
+        recursiveSearch(node[char], idx + 1);
       }
 
       return;
     }
 
-    if (!node.children.has(char)) {
+    if (!(char in node)) {
       return;
     }
 
-    const nextNode = node.children.get(char);
+    const nextNode = node[char];
     recursiveSearch(nextNode, idx + 1);
   };
 
