@@ -15,21 +15,23 @@ const pathSum = function (root, targetSum) {
   const result = [];
 
   const dfs = (node, before, beforeTotal) => {
-    const isLeaf = !node?.left && !node?.right;
-
     if (!node) {
       return;
     }
 
+    before.push(node.val);
+
+    const isLeaf = !node?.left && !node?.right;
     const total = beforeTotal + node.val;
-    const now = before.concat(node.val);
 
     if (total === targetSum && isLeaf) {
-      result.push(now);
+      result.push([...before]);
     }
 
-    dfs(node?.left, [...now], total);
-    dfs(node?.right, [...now], total);
+    dfs(node?.left, before, total);
+    dfs(node?.right, before, total);
+
+    before.pop();
   };
 
   dfs(root, [], 0);
